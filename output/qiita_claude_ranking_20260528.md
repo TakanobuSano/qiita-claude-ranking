@@ -2,7 +2,7 @@
 
 - 対象タグ: claude, ClaudeCode
 - 対象期間: 2026-05-21 〜 2026-05-28
-- 集計記事数: 289 件
+- 集計記事数: 290 件
 - ランキング基準: ストック数順
 
 > 注意: このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。
@@ -10,7 +10,7 @@
 
 ## 1位 [【Claude Code / Codex × GAS】コピペ脱出！Google Workspace自動化レシピ7選](https://qiita.com/TMiyamoto/items/47a13155032f716a43bd)
 
-**20ストック**　**27いいね**　/　[TMiyamoto](https://qiita.com/TMiyamoto) さん 2026-05-27 13時投稿
+**21ストック**　**27いいね**　/　[TMiyamoto](https://qiita.com/TMiyamoto) さん 2026-05-27 13時投稿
 
 `GoogleAppsScript` `自動化` `codex` `生成AI` `ClaudeCode`
 
@@ -40,19 +40,19 @@
 
 ---
 
-## 5位 [Claude CodeによるIaCコード生成の標準化　案件横断で使い回せる仕組みづくりを始めてみた話](https://qiita.com/ike_s_muramatsu/items/af5d5264d9d3045568a4)
+## 5位 [Claude Code時代の音声入力アプリ4選｜Mac標準を諦めてAqua Voiceに落ち着くまで](https://qiita.com/kazuki_ogawa/items/776340b97f0ca63292a8)
+
+**10ストック**　**21いいね**　/　[kazuki_ogawa](https://qiita.com/kazuki_ogawa) さん 2026-05-21 20時投稿
+
+`効率化` `AI` `音声認識` `ClaudeCode`
+
+---
+
+## 6位 [Claude CodeによるIaCコード生成の標準化　案件横断で使い回せる仕組みづくりを始めてみた話](https://qiita.com/ike_s_muramatsu/items/af5d5264d9d3045568a4)
 
 **10ストック**　**9いいね**　/　[ike_s_muramatsu](https://qiita.com/ike_s_muramatsu) さん 2026-05-23 13時投稿
 
 `AWS` `CloudFormation` `インフラ` `IaC` `ClaudeCode`
-
----
-
-## 6位 [Claude Code時代の音声入力アプリ4選｜Mac標準を諦めてAqua Voiceに落ち着くまで](https://qiita.com/kazuki_ogawa/items/776340b97f0ca63292a8)
-
-**9ストック**　**21いいね**　/　[kazuki_ogawa](https://qiita.com/kazuki_ogawa) さん 2026-05-21 20時投稿
-
-`効率化` `AI` `音声認識` `ClaudeCode`
 
 ---
 
