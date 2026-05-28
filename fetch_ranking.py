@@ -225,7 +225,6 @@ def escape_markdown_text(text: str) -> str:
 def render_markdown(top: list[Article], since_date: str, today: str, total_unique: int) -> str:
     lines: list[str] = []
 
-    lines.append("# Qiita Claude関連タグ 週間ストック数ランキング")
     lines.append("")
     lines.append(f"- 対象タグ: {', '.join(TARGET_TAGS)}")
     lines.append(f"- 対象期間: {since_date} 〜 {today}")
