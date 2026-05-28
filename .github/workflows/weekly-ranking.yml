@@ -45,8 +45,8 @@ jobs:
 
       - name: Update Qiita item
         env:
-          QIITA_ACCESS_TOKEN: ${{ secrets.3f7f3f81c882010aeba4db4262f324403fa3b3f3 }}
-          QIITA_ITEM_ID: ${{ secrets.b2100c31a1fb61116ace }}
+          QIITA_ACCESS_TOKEN: ${{ secrets.QIITA_ACCESS_TOKEN }}
+          QIITA_ITEM_ID: ${{ secrets.QIITA_ITEM_ID }}
           QIITA_POST_PRIVATE: "true"
         run: |
           python update_qiita_item.py
