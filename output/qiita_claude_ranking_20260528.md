@@ -2,12 +2,12 @@
 
 - 対象タグ: claude, ClaudeCode
 - 期間: 直近 7 日 (created:>=2026-05-21, JST 基準)
-- 集計記事数 (重複排除後): 285 件
+- 集計記事数 (重複排除後): 286 件
 - ランキング指標: stocks_count 降順
 
 | 順位 | タイトル | 投稿者 | ストック | LGTM | コメント | 投稿日 | タグ |
 |---:|---|---|---:|---:|---:|---|---|
-| 1 | [【Claude Code / Codex × GAS】コピペ脱出！Google Workspace自動化レシピ7選](https://qiita.com/TMiyamoto/items/47a13155032f716a43bd) | @TMiyamoto | 19 | 25 | 0 | 2026-05-27 | GoogleAppsScript, 自動化, codex, 生成AI, ClaudeCode |
+| 1 | [【Claude Code / Codex × GAS】コピペ脱出！Google Workspace自動化レシピ7選](https://qiita.com/TMiyamoto/items/47a13155032f716a43bd) | @TMiyamoto | 19 | 26 | 0 | 2026-05-27 | GoogleAppsScript, 自動化, codex, 生成AI, ClaudeCode |
 | 2 | [ドキュメントが失われた AWS 環境を 1 日で再現 + 再構築手順書まで生成 ─ Claude Opus 4.7「infra delegate to」の威力](https://qiita.com/ntaka329/items/b1d961ce5fab8541101f) | @ntaka329 | 13 | 16 | 0 | 2026-05-21 | AWS, CloudFormation, マルチアカウント, 生成AI, ClaudeCode |
 | 3 | [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://qiita.com/hiropon122/items/a8274aef2a4c882197d6) | @hiropon122 | 13 | 14 | 0 | 2026-05-24 | automation, AI, ClaudeCode, AgentSkills |
 | 4 | [15万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術](https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f) | @4q_sano | 12 | 10 | 0 | 2026-05-26 | ClaudeCode |
@@ -23,7 +23,7 @@
 | 14 | [AIが書いたコードを鵜呑みにしない — レビュー観点7つのチェックリスト](https://qiita.com/ennagara128/items/058b66f03c81e41414d4) | @ennagara128 | 3 | 3 | 0 | 2026-05-22 | プログラミング, TypeScript, AI, コードレビュー, ClaudeCode |
 | 15 | [Claude Code の Hooks を使ったら「確認待ち」が消えて開発速度が 2 倍になった話](https://qiita.com/LemonCake/items/b60881f953dfa8c16d20) | @LemonCake | 3 | 3 | 0 | 2026-05-21 | TypeScript, 自動化, hooks, 生産性, ClaudeCode |
 | 16 | [Claudeの回答が長すぎて疲れる人へ｜出力構造をPreferencesで制御して認知負荷を下げる](https://qiita.com/ktdatascience/items/138038261a80f219f706) | @ktdatascience | 3 | 1 | 0 | 2026-05-23 | 初心者, LLM, プロンプトエンジニアリング, Claude, AI生産性 |
-| 17 | [建築士がClaude Codeを自走させたら、2日で公共工事入札DB＋RAG＋記事生成SaaSが動き始めた話](https://qiita.com/architectJapan/items/5aff0a2ff21f9906c9f7) | @architectJapan | 3 | 1 | 0 | 2026-05-27 | cloudflare, Next.js, ChatGPT, 建築士, ClaudeCode |
-| 18 | [MCPとSkillsに続く第3の革命：Claude Code WorkflowがultraworkでAgentをコードに焼き付ける](https://qiita.com/lumichy/items/1db8f575b9e97955c977) | @lumichy | 3 | 1 | 1 | 2026-05-25 | AI, Workflow, Agent, LLM, ClaudeCode |
-| 19 | [【決定版】Claude Code 全設定リファレンス 2026 — CLAUDE.md / Hooks / Permissions / MCP を 1 ページで網羅](https://qiita.com/LemonCake/items/4f043eb440066319dfa6) | @LemonCake | 3 | 0 | 0 | 2026-05-25 | 設定, TypeScript, 自動化, リファレンス, ClaudeCode |
-| 20 | [# 【番外編 第2話】 競馬 データ で 学んだ、 時系列 ML の **リーク 監査 と 確率 較正** 🏇📚](https://qiita.com/architectJapan/items/1f7cfb2b156038c65f99) | @architectJapan | 3 | 0 | 0 | 2026-05-21 | Python, 競馬, ChatGPT, 建築士, ClaudeCode |
+| 17 | [GoogleのAI IDE「Antigravity」がある日突然チャットボットになった話——強制更新騒動を技術的に読み解く](https://qiita.com/lumichy/items/8748aeb59715c7d1d26a) | @lumichy | 3 | 1 | 0 | 2026-05-22 | Google, 開発環境, IDE, AI, Claude |
+| 18 | [建築士がClaude Codeを自走させたら、2日で公共工事入札DB＋RAG＋記事生成SaaSが動き始めた話](https://qiita.com/architectJapan/items/5aff0a2ff21f9906c9f7) | @architectJapan | 3 | 1 | 0 | 2026-05-27 | cloudflare, Next.js, ChatGPT, 建築士, ClaudeCode |
+| 19 | [MCPとSkillsに続く第3の革命：Claude Code WorkflowがultraworkでAgentをコードに焼き付ける](https://qiita.com/lumichy/items/1db8f575b9e97955c977) | @lumichy | 3 | 1 | 1 | 2026-05-25 | AI, Workflow, Agent, LLM, ClaudeCode |
+| 20 | [【決定版】Claude Code 全設定リファレンス 2026 — CLAUDE.md / Hooks / Permissions / MCP を 1 ページで網羅](https://qiita.com/LemonCake/items/4f043eb440066319dfa6) | @LemonCake | 3 | 0 | 0 | 2026-05-25 | 設定, TypeScript, 自動化, リファレンス, ClaudeCode |
