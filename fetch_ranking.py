@@ -196,31 +196,77 @@ def dedupe(articles: Iterable[Article]) -> list[Article]:
     return list(seen.values())
 
 
+def format_created_at(created_at: str) -> str:
+    """
+    Qiita API の created_at を、Qiita記事向けに読みやすい形式へ変換する。
+    例: 2026-05-24T16:00:00+09:00 -> 2026-05-24 16時投稿
+    """
+    if not created_at:
+        return ""
+
+    try:
+        dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+        return dt.strftime("%Y-%m-%d %H時投稿")
+    except ValueError:
+        return created_at[:10]
+
+
+def escape_markdown_text(text: str) -> str:
+    """
+    Markdownリンクの表示テキストで壊れやすい文字を簡易エスケープする。
+    """
+    return (
+        text.replace("\\", "\\\\")
+        .replace("[", "\\[")
+        .replace("]", "\\]")
+    )
+
+
 def render_markdown(top: list[Article], since_date: str, today: str, total_unique: int) -> str:
     lines: list[str] = []
-    lines.append(f"# Qiita Claude タグ記事ランキング ({since_date} 〜 {today}, JST)")
+
+    lines.append("# Qiita Claude関連タグ 週間ストック数ランキング")
     lines.append("")
     lines.append(f"- 対象タグ: {', '.join(TARGET_TAGS)}")
-    lines.append(f"- 期間: 直近 {LOOKBACK_DAYS} 日 (created:>={since_date}, JST 基準)")
-    lines.append(f"- 集計記事数 (重複排除後): {total_unique} 件")
-    lines.append(f"- ランキング指標: stocks_count 降順")
+    lines.append(f"- 対象期間: {since_date} 〜 {today}")
+    lines.append(f"- 集計記事数: {total_unique} 件")
+    lines.append("- ランキング基準: ストック数順")
+    lines.append("")
+    lines.append("> 注意: このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。")
+    lines.append("> 「この1週間で増えたストック数ランキング」ではありません。")
     lines.append("")
 
     if not top:
-        lines.append("> 該当する記事が見つかりませんでした。")
+        lines.append("該当する記事が見つかりませんでした。")
         lines.append("")
         return "\n".join(lines)
 
-    lines.append("| 順位 | タイトル | 投稿者 | ストック | LGTM | コメント | 投稿日 | タグ |")
-    lines.append("|---:|---|---|---:|---:|---:|---|---|")
     for i, a in enumerate(top, 1):
-        title_md = a.title.replace("|", "\\|")
-        tags_md = ", ".join(a.tags[:5]).replace("|", "\\|")
-        created = a.created_at[:10] if a.created_at else ""
-        lines.append(
-            f"| {i} | [{title_md}]({a.url}) | @{a.user_id} | {a.stocks_count} | {a.likes_count} | {a.comments_count} | {created} | {tags_md} |"
+        title = escape_markdown_text(a.title)
+        user_id = a.user_id
+        user_url = f"https://qiita.com/{user_id}" if user_id else ""
+        created = format_created_at(a.created_at)
+
+        tag_badges = " ".join(
+            f"`{tag}`" for tag in a.tags[:5] if tag
         )
-    lines.append("")
+
+        lines.append(f"## {i}位 [{title}]({a.url})")
+        lines.append("")
+        lines.append(
+            f"**{a.stocks_count}ストック**　"
+            f"**{a.likes_count}いいね**　/　"
+            f"[{user_id}]({user_url}) さん {created}"
+        )
+        lines.append("")
+
+        if tag_badges:
+            lines.append(tag_badges)
+            lines.append("")
+
+        lines.append("---")
+        lines.append("")
+
     return "\n".join(lines)
 
 
