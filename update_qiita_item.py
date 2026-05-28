@@ -56,6 +56,8 @@ def build_body(md_path: Path) -> str:
 この記事は、GitHub Actions と Qiita API v2 を使って自動更新しています。
 
 - 最終更新日: {updated_date}
+- 更新頻度: 毎日自動更新
+- 更新方法: GitHub Actions と Qiita API v2 による自動更新
 - 対象タグ: `claude`, `ClaudeCode`
 - 集計基準: 直近7日間に投稿された記事の累計ストック数
 - 注意: 「この1週間で増えたストック数」ではなく、集計時点の累計 `stocks_count` によるランキングです。
