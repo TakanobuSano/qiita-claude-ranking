@@ -1,4 +1,3 @@
-# Qiita Claude関連タグ 週間ストック数ランキング
 
 - 対象タグ: claude, ClaudeCode
 - 対象期間: 2026-05-21 〜 2026-05-28
@@ -34,7 +33,7 @@
 
 ## 4位 [15万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術](https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f)
 
-**12ストック**　**10いいね**　/　[4q_sano](https://qiita.com/4q_sano) さん 2026-05-26 22時投稿
+**13ストック**　**10いいね**　/　[4q_sano](https://qiita.com/4q_sano) さん 2026-05-26 22時投稿
 
 `ClaudeCode`
 
@@ -58,7 +57,7 @@
 
 ## 7位 [【AI駆動開発】迷ったらこれ！OpenSpecチートシート【仕様駆動開発】](https://qiita.com/Nana_777/items/aff2e56e4248cee1114e)
 
-**6ストック**　**16いいね**　/　[Nana_777](https://qiita.com/Nana_777) さん 2026-05-26 22時投稿
+**7ストック**　**16いいね**　/　[Nana_777](https://qiita.com/Nana_777) さん 2026-05-26 22時投稿
 
 `AI` `AI駆動開発` `ClaudeCode` `仕様駆動開発` `Openspec`
 
