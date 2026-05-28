@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+"""
+GitHub Actionsで生成した最新ランキングMarkdownを、
+既存のQiita記事に上書き更新するスクリプト。
+
+必要な環境変数:
+- QIITA_ACCESS_TOKEN
+- QIITA_ITEM_ID
+- QIITA_POST_PRIVATE
+  - true  : 限定共有のまま更新
+  - false : 公開記事として更新
+"""
+
+from __future__ import annotations
+
+import json
+import os
+import sys
+from datetime import datetime
+from pathlib import Path
+from urllib import request, error
+
+
+OUTPUT_DIR = Path("output")
+QIITA_API_BASE = "https://qiita.com/api/v2/items"
+
+
+def find_latest_markdown() -> Path:
+    files = sorted(OUTPUT_DIR.glob("qiita_claude_ranking_*.md"))
+    if not files:
+        raise FileNotFoundError("output/ 配下に qiita_claude_ranking_*.md が見つかりません。")
+    return files[-1]
+
+
+def extract_date_text(md_path: Path) -> str:
+    # 例: qiita_claude_ranking_20260528.md
+    date_part = md_path.stem.replace("qiita_claude_ranking_", "")
+
+    try:
+        dt = datetime.strptime(date_part, "%Y%m%d")
+        return dt.strftime("%Y-%m-%d")
+    except ValueError:
+        return date_part
+
+
+def build_body(md_path: Path) -> str:
+    body = md_path.read_text(encoding="utf-8")
+    updated_date = extract_date_text(md_path)
+
+    footer = f"""
+
+---
+
+## このランキングについて
+
+この記事は、GitHub Actions と Qiita API v2 を使って自動更新しています。
+
+- 最終更新日: {updated_date}
+- 対象タグ: `claude`, `ClaudeCode`
+- 集計基準: 直近7日間に投稿された記事の累計ストック数
+- 注意: 「この1週間で増えたストック数」ではなく、集計時点の累計 `stocks_count` によるランキングです。
+"""
+
+    return body + footer
+
+
+def update_qiita_item(
+    item_id: str,
+    title: str,
+    body: str,
+    private: bool,
+    token: str,
+) -> dict:
+    url = f"{QIITA_API_BASE}/{item_id}"
+
+    payload = {
+        "title": title,
+        "body": body,
+        "private": private,
+        "tags": [
+            {"name": "Qiita", "versions": []},
+            {"name": "Python", "versions": []},
+            {"name": "GitHubActions", "versions": []},
+            {"name": "Claude", "versions": []},
+            {"name": "ClaudeCode", "versions": []},
+        ],
+        "slide": False,
+    }
+
+    data = json.dumps(payload, ensure_ascii=False).encode("utf-8")
+
+    req = request.Request(
+        url,
+        data=data,
+        method="PATCH",
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+            "User-Agent": "qiita-claude-ranking-updater/1.0",
+        },
+    )
+
+    try:
+        with request.urlopen(req, timeout=30) as resp:
+            return json.loads(resp.read().decode("utf-8"))
+    except error.HTTPError as e:
+        err_body = e.read().decode("utf-8", errors="replace")
+        raise RuntimeError(f"Qiita update failed: HTTP {e.code}: {err_body}") from e
+
+
+def main() -> int:
+    token = os.environ.get("QIITA_ACCESS_TOKEN")
+    item_id = os.environ.get("QIITA_ITEM_ID")
+
+    if not token:
+        print("[error] QIITA_ACCESS_TOKEN is required.", file=sys.stderr)
+        return 1
+
+    if not item_id:
+        print("[error] QIITA_ITEM_ID is required.", file=sys.stderr)
+        return 1
+
+    private = os.environ.get("QIITA_POST_PRIVATE", "true").lower() == "true"
+
+    md_path = find_latest_markdown()
+    body = build_body(md_path)
+
+    title = "Qiita Claude関連タグ 週間ストック数ランキング【毎週更新】"
+
+    print(f"[info] updating Qiita item: {item_id}", file=sys.stderr)
+    print(f"[info] source markdown: {md_path}", file=sys.stderr)
+    print(f"[info] private: {private}", file=sys.stderr)
+
+    result = update_qiita_item(
+        item_id=item_id,
+        title=title,
+        body=body,
+        private=private,
+        token=token,
+    )
+
+    print("[done] updated Qiita item")
+    print(result.get("url", ""))
+
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
