@@ -2,12 +2,12 @@
 
 - 対象タグ: claude, ClaudeCode
 - 期間: 直近 7 日 (created:>=2026-05-21, JST 基準)
-- 集計記事数 (重複排除後): 286 件
+- 集計記事数 (重複排除後): 288 件
 - ランキング指標: stocks_count 降順
 
 | 順位 | タイトル | 投稿者 | ストック | LGTM | コメント | 投稿日 | タグ |
 |---:|---|---|---:|---:|---:|---|---|
-| 1 | [【Claude Code / Codex × GAS】コピペ脱出！Google Workspace自動化レシピ7選](https://qiita.com/TMiyamoto/items/47a13155032f716a43bd) | @TMiyamoto | 19 | 26 | 0 | 2026-05-27 | GoogleAppsScript, 自動化, codex, 生成AI, ClaudeCode |
+| 1 | [【Claude Code / Codex × GAS】コピペ脱出！Google Workspace自動化レシピ7選](https://qiita.com/TMiyamoto/items/47a13155032f716a43bd) | @TMiyamoto | 20 | 27 | 0 | 2026-05-27 | GoogleAppsScript, 自動化, codex, 生成AI, ClaudeCode |
 | 2 | [ドキュメントが失われた AWS 環境を 1 日で再現 + 再構築手順書まで生成 ─ Claude Opus 4.7「infra delegate to」の威力](https://qiita.com/ntaka329/items/b1d961ce5fab8541101f) | @ntaka329 | 13 | 16 | 0 | 2026-05-21 | AWS, CloudFormation, マルチアカウント, 生成AI, ClaudeCode |
 | 3 | [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://qiita.com/hiropon122/items/a8274aef2a4c882197d6) | @hiropon122 | 13 | 14 | 0 | 2026-05-24 | automation, AI, ClaudeCode, AgentSkills |
 | 4 | [15万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術](https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f) | @4q_sano | 12 | 10 | 0 | 2026-05-26 | ClaudeCode |
