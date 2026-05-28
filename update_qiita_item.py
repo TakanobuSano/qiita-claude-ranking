@@ -126,7 +126,7 @@ def main() -> int:
     md_path = find_latest_markdown()
     body = build_body(md_path)
 
-    title = "Qiita Claude関連タグ 週間ストック数ランキング【毎週更新】"
+    title = "Qiita Claude関連タグ 直近7日間ストック数ランキング【毎日自動更新】"
 
     print(f"[info] updating Qiita item: {item_id}", file=sys.stderr)
     print(f"[info] source markdown: {md_path}", file=sys.stderr)
