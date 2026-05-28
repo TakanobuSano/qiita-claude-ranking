@@ -264,8 +264,10 @@ def render_markdown(top: list[Article], since_date: str, today: str, total_uniqu
             lines.append(tag_badges)
             lines.append("")
 
-        lines.append("---")
-        lines.append("")
+        # 最後の記事の後には区切り線を出さない
+        if i != len(top):
+            lines.append("---")
+            lines.append("")
 
     return "\n".join(lines)
 
