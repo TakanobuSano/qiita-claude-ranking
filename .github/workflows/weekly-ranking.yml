@@ -4,7 +4,6 @@ on:
   workflow_dispatch:
 
   schedule:
-    # 毎週月曜日 09:13 JST に実行
     - cron: "13 9 * * 1"
       timezone: "Asia/Tokyo"
 
@@ -43,3 +42,11 @@ jobs:
             git commit -m "Update weekly Qiita Claude ranking"
             git push
           fi
+
+      - name: Update Qiita item
+        env:
+          QIITA_ACCESS_TOKEN: ${{ secrets.QIITA_ACCESS_TOKEN }}
+          QIITA_ITEM_ID: ${{ secrets.QIITA_ITEM_ID }}
+          QIITA_POST_PRIVATE: "true"
+        run: |
+          python update_qiita_item.py
