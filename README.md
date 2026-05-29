@@ -82,12 +82,13 @@ GitHub Actions のワークフローファイルです。
 現在は、毎日自動実行する想定です。
 
 ```yaml
-schedule:
-  - cron: "13 9 * * *"
-    timezone: "Asia/Tokyo"
+  schedule:
+    # 毎日 09:37 JST に実行
+    # GitHub Actions の cron は UTC 基準
+    - cron: "37 0 * * *"
 ```
 
-これは、毎日 09:13 JST に実行する設定です。
+これは、毎日 09:37 JST に実行する設定です。
 
 手動実行にも対応しています。
 
