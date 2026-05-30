@@ -1,7 +1,7 @@
 
 - 対象タグ: claude, ClaudeCode, MCP
 - 対象期間: 2026-05-23 〜 2026-05-30
-- 集計記事数: 331 件
+- 集計記事数: 332 件
 - ランキング基準: ストック数順
 
 > 注意: このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。
@@ -71,19 +71,19 @@
 
 ---
 
-## 9位 [Claude Opus 4.8 を読み解く――「賢さ」から「任せられるか」へ移った設計思想とDynamic Workflows](https://qiita.com/nogataka/items/266dcb5c7a08e25d09d8)
+## 9位 [学習が続かないエンジニアへ。仲間と一緒に成長できるコミュニティを作りました](https://qiita.com/ari_init/items/747c997d65ac873addd1)
+
+**5ストック**　**8いいね**　/　[ari_init](https://qiita.com/ari_init) さん 2026-05-29 09時投稿
+
+`GitHub` `初心者` `AI` `学習記録` `ClaudeCode`
+
+---
+
+## 10位 [Claude Opus 4.8 を読み解く――「賢さ」から「任せられるか」へ移った設計思想とDynamic Workflows](https://qiita.com/nogataka/items/266dcb5c7a08e25d09d8)
 
 **5ストック**　**7いいね**　/　[nogataka](https://qiita.com/nogataka) さん 2026-05-29 10時投稿
 
 `AI` `生成AI` `LLM` `Anthropic` `ClaudeCode`
-
----
-
-## 10位 [学習が続かないエンジニアへ。仲間と一緒に成長できるコミュニティを作りました](https://qiita.com/ari_init/items/747c997d65ac873addd1)
-
-**5ストック**　**7いいね**　/　[ari_init](https://qiita.com/ari_init) さん 2026-05-29 09時投稿
-
-`GitHub` `初心者` `AI` `学習記録` `ClaudeCode`
 
 ---
 
