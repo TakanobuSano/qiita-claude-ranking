@@ -6,7 +6,7 @@ on:
     # 毎日 09:37 JST に実行
     # GitHub Actions の cron は UTC 基準
     - cron: "37 0 * * *"
-    - cron: "35 1 * * *"
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
