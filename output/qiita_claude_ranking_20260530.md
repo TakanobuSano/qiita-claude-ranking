@@ -9,7 +9,7 @@
 
 ## 1位 [16万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術](https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f)
 
-**76ストック**　**71いいね**　/　[4q_sano](https://qiita.com/4q_sano) さん 2026-05-26 22時投稿
+**78ストック**　**72いいね**　/　[4q_sano](https://qiita.com/4q_sano) さん 2026-05-26 22時投稿
 
 `ClaudeCode`
 
@@ -33,7 +33,7 @@
 
 ## 4位 [【AI駆動開発】迷ったらこれ！OpenSpecチートシート【仕様駆動開発】](https://qiita.com/Nana_777/items/aff2e56e4248cee1114e)
 
-**10ストック**　**20いいね**　/　[Nana_777](https://qiita.com/Nana_777) さん 2026-05-26 22時投稿
+**10ストック**　**21いいね**　/　[Nana_777](https://qiita.com/Nana_777) さん 2026-05-26 22時投稿
 
 `AI` `AI駆動開発` `ClaudeCode` `仕様駆動開発` `Openspec`
 
@@ -49,7 +49,7 @@
 
 ## 6位 [出たてほやほやのClaude Opus 4.8を整理してみた](https://qiita.com/kaichan_dot/items/a5234436a61194e24df7)
 
-**7ストック**　**23いいね**　/　[kaichan_dot](https://qiita.com/kaichan_dot) さん 2026-05-29 04時投稿
+**7ストック**　**24いいね**　/　[kaichan_dot](https://qiita.com/kaichan_dot) さん 2026-05-29 04時投稿
 
 `AI` `駆け出しエンジニア` `LLM` `Claude` `ClaudeCode`
 
