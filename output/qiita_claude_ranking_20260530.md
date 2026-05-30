@@ -1,7 +1,7 @@
 
 - 対象タグ: claude, ClaudeCode, MCP
 - 対象期間: 2026-05-23 〜 2026-05-30
-- 集計記事数: 332 件
+- 集計記事数: 338 件
 - ランキング基準: ストック数順
 
 > 注意: このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。
@@ -9,7 +9,7 @@
 
 ## 1位 [16万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術](https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f)
 
-**78ストック**　**72いいね**　/　[4q_sano](https://qiita.com/4q_sano) さん 2026-05-26 22時投稿
+**82ストック**　**75いいね**　/　[4q_sano](https://qiita.com/4q_sano) さん 2026-05-26 22時投稿
 
 `ClaudeCode`
 
@@ -25,7 +25,7 @@
 
 ## 3位 [Claude Codeのスキルが毎日勝手に改善されていく仕組みを作った](https://qiita.com/hiropon122/items/a8274aef2a4c882197d6)
 
-**16ストック**　**18いいね**　/　[hiropon122](https://qiita.com/hiropon122) さん 2026-05-24 07時投稿
+**17ストック**　**19いいね**　/　[hiropon122](https://qiita.com/hiropon122) さん 2026-05-24 07時投稿
 
 `automation` `AI` `ClaudeCode` `AgentSkills`
 
@@ -49,7 +49,7 @@
 
 ## 6位 [出たてほやほやのClaude Opus 4.8を整理してみた](https://qiita.com/kaichan_dot/items/a5234436a61194e24df7)
 
-**7ストック**　**24いいね**　/　[kaichan_dot](https://qiita.com/kaichan_dot) さん 2026-05-29 04時投稿
+**7ストック**　**25いいね**　/　[kaichan_dot](https://qiita.com/kaichan_dot) さん 2026-05-29 04時投稿
 
 `AI` `駆け出しエンジニア` `LLM` `Claude` `ClaudeCode`
 
@@ -95,7 +95,15 @@
 
 ---
 
-## 12位 [Bedrock Tool Use から Aurora pgvector を直接叩く — Knowledge Bases を使わない RAG の組み立て](https://qiita.com/asahide/items/3e35c460e3b18606f1f3)
+## 12位 [Claude に E2E 回帰試験を振ったら呼び戻され続けた話 ── "段取り八分" を地で行く現場ノウハウ](https://qiita.com/ntaka329/items/af9551596ea5fa7a6f30)
+
+**3ストック**　**6いいね**　/　[ntaka329](https://qiita.com/ntaka329) さん 2026-05-28 16時投稿
+
+`テスト自動化` `E2Eテスト` `リグレッションテスト` `Playwright` `ClaudeCode`
+
+---
+
+## 13位 [Bedrock Tool Use から Aurora pgvector を直接叩く — Knowledge Bases を使わない RAG の組み立て](https://qiita.com/asahide/items/3e35c460e3b18606f1f3)
 
 **3ストック**　**5いいね**　/　[asahide](https://qiita.com/asahide) さん 2026-05-24 19時投稿
 
@@ -103,7 +111,7 @@
 
 ---
 
-## 13位 [あの手この手を試してもダメで、結局「読ませる形式」が問題だった話――CSVをYAMLに変えたら処理時間60%・使用量70%削減できた](https://qiita.com/inaba-yoshiko/items/410d83f31e8d8b606ba9)
+## 14位 [あの手この手を試してもダメで、結局「読ませる形式」が問題だった話――CSVをYAMLに変えたら処理時間60%・使用量70%削減できた](https://qiita.com/inaba-yoshiko/items/410d83f31e8d8b606ba9)
 
 **3ストック**　**4いいね**　/　[inaba-yoshiko](https://qiita.com/inaba-yoshiko) さん 2026-05-26 12時投稿
 
@@ -111,7 +119,7 @@
 
 ---
 
-## 14位 [AIのハルシネーションを見破る『セカンドオピニオン』調査術：Claude CodeとGitHub Copilotの比較検証フロー](https://qiita.com/oguri-gmoconnect/items/53986a41bfd50eee264e)
+## 15位 [AIのハルシネーションを見破る『セカンドオピニオン』調査術：Claude CodeとGitHub Copilotの比較検証フロー](https://qiita.com/oguri-gmoconnect/items/53986a41bfd50eee264e)
 
 **3ストック**　**4いいね**　/　[oguri-gmoconnect](https://qiita.com/oguri-gmoconnect) さん 2026-05-26 11時投稿
 
@@ -119,7 +127,7 @@
 
 ---
 
-## 15位 [Claudeの回答が長すぎて疲れる人へ｜出力構造をPreferencesで制御して認知負荷を下げる](https://qiita.com/ktdatascience/items/138038261a80f219f706)
+## 16位 [Claudeの回答が長すぎて疲れる人へ｜出力構造をPreferencesで制御して認知負荷を下げる](https://qiita.com/ktdatascience/items/138038261a80f219f706)
 
 **3ストック**　**1いいね**　/　[ktdatascience](https://qiita.com/ktdatascience) さん 2026-05-23 11時投稿
 
@@ -127,7 +135,7 @@
 
 ---
 
-## 16位 [建築士がClaude Codeを自走させたら、2日で公共工事入札DB＋RAG＋記事生成SaaSが動き始めた話](https://qiita.com/architectJapan/items/5aff0a2ff21f9906c9f7)
+## 17位 [建築士がClaude Codeを自走させたら、2日で公共工事入札DB＋RAG＋記事生成SaaSが動き始めた話](https://qiita.com/architectJapan/items/5aff0a2ff21f9906c9f7)
 
 **3ストック**　**1いいね**　/　[architectJapan](https://qiita.com/architectJapan) さん 2026-05-27 07時投稿
 
@@ -135,7 +143,7 @@
 
 ---
 
-## 17位 [MCPとSkillsに続く第3の革命：Claude Code WorkflowがultraworkでAgentをコードに焼き付ける](https://qiita.com/lumichy/items/1db8f575b9e97955c977)
+## 18位 [MCPとSkillsに続く第3の革命：Claude Code WorkflowがultraworkでAgentをコードに焼き付ける](https://qiita.com/lumichy/items/1db8f575b9e97955c977)
 
 **3ストック**　**1いいね**　/　[lumichy](https://qiita.com/lumichy) さん 2026-05-25 22時投稿
 
@@ -143,7 +151,7 @@
 
 ---
 
-## 18位 [【決定版】Claude Code 全設定リファレンス 2026 — CLAUDE.md / Hooks / Permissions / MCP を 1 ページで網羅](https://qiita.com/LemonCake/items/4f043eb440066319dfa6)
+## 19位 [【決定版】Claude Code 全設定リファレンス 2026 — CLAUDE.md / Hooks / Permissions / MCP を 1 ページで網羅](https://qiita.com/LemonCake/items/4f043eb440066319dfa6)
 
 **3ストック**　**0いいね**　/　[LemonCake](https://qiita.com/LemonCake) さん 2026-05-25 10時投稿
 
@@ -151,16 +159,8 @@
 
 ---
 
-## 19位 [Claude Managed AgentsでLチカ！（エージェント時代のIoTはこれか？！）](https://qiita.com/moritalous/items/2f4787ef19221773e685)
+## 20位 [Claude Managed AgentsでLチカ！（エージェント時代のIoTはこれか？！）](https://qiita.com/moritalous/items/2f4787ef19221773e685)
 
 **2ストック**　**11いいね**　/　[moritalous](https://qiita.com/moritalous) さん 2026-05-24 11時投稿
 
 `RaspberryPi` `IoT` `Anthropic` `Claude`
-
----
-
-## 20位 [Claude Codeで独自タイミングのhooksを自作する](https://qiita.com/hiropon122/items/12e273d9e6aca359be7d)
-
-**2ストック**　**7いいね**　/　[hiropon122](https://qiita.com/hiropon122) さん 2026-05-27 08時投稿
-
-`AI` `ClaudeCode` `AgentSkills`
