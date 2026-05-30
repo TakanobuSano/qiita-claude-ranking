@@ -47,6 +47,6 @@ jobs:
         env:
           QIITA_ACCESS_TOKEN: ${{ secrets.QIITA_ACCESS_TOKEN }}
           QIITA_ITEM_ID: ${{ secrets.QIITA_ITEM_ID }}
-          QIITA_POST_PRIVATE: "false"
+          QIITA_POST_PRIVATE: "true"
         run: |
           python update_qiita_item.py
