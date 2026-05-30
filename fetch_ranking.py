@@ -27,7 +27,7 @@ import urllib.error
 
 # ===== 設定 =====
 QIITA_API_BASE = "https://qiita.com/api/v2/items"
-TARGET_TAGS = ["claude", "ClaudeCode"]
+TARGET_TAGS = ["claude", "ClaudeCode", "MCP"]
 LOOKBACK_DAYS = 7
 PER_PAGE = 100  # Qiita API の上限
 MAX_PAGES = 10  # 念のための安全装置 (最大 100 * 10 = 1000 件)
