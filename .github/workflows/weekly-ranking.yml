@@ -2,7 +2,6 @@ name: Weekly Qiita Claude Ranking
 
 on:
   workflow_dispatch:
-
   schedule:
     # 毎日 09:37 JST に実行
     # UTCでは 00:37
@@ -30,12 +29,46 @@ jobs:
         run: |
           python fetch_ranking.py
 
+      - name: Keep latest 5 days of output files
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from collections import defaultdict
+          import re
+
+          output_dir = Path("output")
+          pattern = re.compile(r"^qiita_claude_ranking_(\d{8})\.(md|csv)$")
+
+          files_by_date = defaultdict(list)
+
+          for path in output_dir.glob("qiita_claude_ranking_*.*"):
+              match = pattern.match(path.name)
+              if not match:
+                  continue
+
+              date_text = match.group(1)
+              files_by_date[date_text].append(path)
+
+          # 日付の新しい順に並べて、最新5日分だけ残す
+          keep_dates = set(sorted(files_by_date.keys(), reverse=True)[:5])
+
+          for date_text, paths in files_by_date.items():
+              if date_text in keep_dates:
+                  continue
+
+              for path in paths:
+                  print(f"delete: {path}")
+                  path.unlink()
+
+          print("keep dates:", ", ".join(sorted(keep_dates, reverse=True)))
+          PY
+
       - name: Commit ranking outputs
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add output/
+          git add -A output/
 
           if git diff --cached --quiet; then
             echo "No changes to commit."
