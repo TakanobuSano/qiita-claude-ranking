@@ -2,10 +2,13 @@ name: Weekly Qiita Claude Ranking
 
 on:
   workflow_dispatch:
+
+  push:
+    branches:
+      - main
+
   schedule:
-    # 毎日 09:37 JST に実行
-    # GitHub Actions の cron は UTC 基準
-    - cron: "37 0 * * *"
+    # テスト用: 5分ごとに実行
     - cron: "*/5 * * * *"
 
 permissions:
