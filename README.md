@@ -19,7 +19,7 @@ Qiita API v2 と GitHub Actions を使って、Qiita の `claude` / `ClaudeCode`
 
 このランキングは、以下の条件で集計しています。
 
-* 対象タグ: `claude`, `ClaudeCode`
+* 対象タグ: `claude`, `ClaudeCode`, `MCP`
 * 対象期間: 直近7日間に投稿された記事
 * 集計基準: 集計時点の累計 `stocks_count`
 * 並び順: `stocks_count` 降順
