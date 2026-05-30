@@ -4,7 +4,9 @@ on:
   workflow_dispatch:
 
   schedule:
-    - cron: "*/5 * * * *"
+    # 毎日 09:37 JST に実行
+    # UTCでは 00:37
+    - cron: "37 0 * * *"
 
 permissions:
   contents: write
