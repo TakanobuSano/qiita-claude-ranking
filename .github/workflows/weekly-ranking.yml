@@ -3,12 +3,7 @@ name: Weekly Qiita Claude Ranking
 on:
   workflow_dispatch:
 
-  push:
-    branches:
-      - main
-
   schedule:
-    # テスト用: 5分ごとに実行
     - cron: "*/5 * * * *"
 
 permissions:
