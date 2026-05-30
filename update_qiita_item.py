@@ -80,7 +80,6 @@ def update_qiita_item(
         "body": body,
         "private": private,
         "tags": [
-            {"name": "Qiita", "versions": []},
             {"name": "Python", "versions": []},
             {"name": "GitHubActions", "versions": []},
             {"name": "Claude", "versions": []},
