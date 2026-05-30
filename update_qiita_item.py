@@ -85,6 +85,7 @@ def update_qiita_item(
             {"name": "GitHubActions", "versions": []},
             {"name": "Claude", "versions": []},
             {"name": "ClaudeCode", "versions": []},
+            {"name": "MCP", "versions": []},
         ],
         "slide": False,
     }
