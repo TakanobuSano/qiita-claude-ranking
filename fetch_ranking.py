@@ -2,7 +2,7 @@
 """
 Qiita 記事ランキング取得スクリプト
 
-Qiita API v2 を使って、claude / ClaudeCode タグの記事を直近7日間で取得し、
+Qiita API v2 を使って、claude / ClaudeCode / MCP タグの記事を直近7日間で取得し、
 stocks_count 降順でランキング化して Markdown と CSV を出力する。
 
 - 認証: .env の QIITA_ACCESS_TOKEN (なければ非認証)
@@ -21,8 +21,8 @@ from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urlencode
 
-import urllib.request
 import urllib.error
+import urllib.request
 
 
 # ===== 設定 =====
@@ -43,13 +43,17 @@ def load_dotenv(path: str = ".env") -> None:
     p = Path(path)
     if not p.exists():
         return
+
     for raw in p.read_text(encoding="utf-8").splitlines():
         line = raw.strip()
+
         if not line or line.startswith("#") or "=" not in line:
             continue
+
         key, _, value = line.partition("=")
         key = key.strip()
         value = value.strip().strip('"').strip("'")
+
         # 既存環境変数は上書きしない
         os.environ.setdefault(key, value)
 
@@ -86,44 +90,70 @@ class Article:
 def http_get_json(url: str, headers: dict[str, str]) -> tuple[list[dict[str, Any]], dict[str, str]]:
     """
     Qiita API を叩いて (JSON, レスポンスヘッダ) を返す。
-    429 / 5xx は指数バックオフで MAX_RETRY 回までリトライ。
+    429 / 5xx は指数バックオフで MAX_RETRY 回までリトライする。
     """
     last_err: Exception | None = None
+
     for attempt in range(1, MAX_RETRY + 1):
         req = urllib.request.Request(url, headers=headers, method="GET")
+
         try:
             with urllib.request.urlopen(req, timeout=TIMEOUT_SEC) as resp:
                 body = resp.read().decode("utf-8")
+
                 import json as _json
+
                 data = _json.loads(body) if body else []
                 resp_headers = {k: v for k, v in resp.headers.items()}
+
                 return data, resp_headers
+
         except urllib.error.HTTPError as e:
             last_err = e
+
             # 429 はレートリミット。Retry-After ヘッダがあれば従う
             if e.code == 429:
                 retry_after = e.headers.get("Retry-After")
-                wait = int(retry_after) if (retry_after and retry_after.isdigit()) else (2 ** attempt)
-                print(f"  [warn] 429 rate limit. waiting {wait}s (attempt {attempt}/{MAX_RETRY})", file=sys.stderr)
+                wait = int(retry_after) if (retry_after and retry_after.isdigit()) else (2**attempt)
+
+                print(
+                    f"  [warn] 429 rate limit. waiting {wait}s "
+                    f"(attempt {attempt}/{MAX_RETRY})",
+                    file=sys.stderr,
+                )
                 time.sleep(wait)
                 continue
+
             # 5xx は一時的エラーとしてリトライ
             if 500 <= e.code < 600:
-                wait = 2 ** attempt
-                print(f"  [warn] HTTP {e.code}. retry in {wait}s ({attempt}/{MAX_RETRY})", file=sys.stderr)
+                wait = 2**attempt
+
+                print(
+                    f"  [warn] HTTP {e.code}. retry in {wait}s "
+                    f"({attempt}/{MAX_RETRY})",
+                    file=sys.stderr,
+                )
                 time.sleep(wait)
                 continue
+
             # 4xx (429 以外) は即座に投げる
             err_body = ""
             try:
                 err_body = e.read().decode("utf-8", errors="replace")
             except Exception:
                 pass
+
             raise RuntimeError(f"Qiita API error {e.code}: {err_body or e.reason}") from e
+
         except urllib.error.URLError as e:
             last_err = e
-            wait = 2 ** attempt
-            print(f"  [warn] network error: {e}. retry in {wait}s ({attempt}/{MAX_RETRY})", file=sys.stderr)
+            wait = 2**attempt
+
+            print(
+                f"  [warn] network error: {e}. retry in {wait}s "
+                f"({attempt}/{MAX_RETRY})",
+                file=sys.stderr,
+            )
             time.sleep(wait)
             continue
 
@@ -132,30 +162,41 @@ def http_get_json(url: str, headers: dict[str, str]) -> tuple[list[dict[str, Any
 
 def fetch_tag(tag: str, since_date: str, token: str | None) -> list[Article]:
     """
-    1 つのタグについて、created:>=since_date の記事をページングしながら全件取得。
+    1つのタグについて、created:>=since_date の記事をページングしながら取得する。
     """
     headers = {
         "User-Agent": "qiita-claude-ranking/1.0",
         "Accept": "application/json",
     }
+
     if token:
         headers["Authorization"] = f"Bearer {token}"
 
     articles: list[Article] = []
+
     for page in range(1, MAX_PAGES + 1):
         query = f"tag:{tag} created:>={since_date}"
-        params = {"page": page, "per_page": PER_PAGE, "query": query}
+        params = {
+            "page": page,
+            "per_page": PER_PAGE,
+            "query": query,
+        }
         url = f"{QIITA_API_BASE}?{urlencode(params)}"
+
         print(f"  GET tag={tag} page={page}", file=sys.stderr)
 
         data, resp_headers = http_get_json(url, headers)
 
         if not isinstance(data, list):
-            print(f"  [warn] unexpected response shape for tag={tag}: {type(data).__name__}", file=sys.stderr)
+            print(
+                f"  [warn] unexpected response shape for tag={tag}: "
+                f"{type(data).__name__}",
+                file=sys.stderr,
+            )
             break
 
         if not data:
-            # 空ページに到達 → 取得完了
+            # 空ページに到達したら取得完了
             break
 
         for raw in data:
@@ -164,12 +205,16 @@ def fetch_tag(tag: str, since_date: str, token: str | None) -> list[Article]:
             except Exception as e:
                 print(f"  [warn] skip malformed item: {e}", file=sys.stderr)
 
-        # レートリミット情報を残しておく
+        # レートリミット情報を見て、残数が少ない場合は軽く待つ
         remaining = resp_headers.get("Rate-Limit-Remaining") or resp_headers.get("rate-limit-remaining")
+
         if remaining is not None:
             try:
                 if int(remaining) < 5:
-                    print(f"  [info] rate-limit-remaining={remaining}, sleeping briefly", file=sys.stderr)
+                    print(
+                        f"  [info] rate-limit-remaining={remaining}, sleeping briefly",
+                        file=sys.stderr,
+                    )
                     time.sleep(2)
             except ValueError:
                 pass
@@ -178,21 +223,28 @@ def fetch_tag(tag: str, since_date: str, token: str | None) -> list[Article]:
         if len(data) < PER_PAGE:
             break
 
-        # マナーとして軽くウェイト
+        # APIへの連続アクセスを避けるため、軽くウェイトする
         time.sleep(0.3)
 
     return articles
 
 
 def dedupe(articles: Iterable[Article]) -> list[Article]:
+    """
+    複数タグで同じ記事が取得される可能性があるため、記事IDで重複排除する。
+    """
     seen: dict[str, Article] = {}
+
     for a in articles:
         if not a.id:
             continue
-        # 重複時は stocks_count が大きい方 (最新値を取りたい) を残す
+
+        # 重複時は stocks_count が大きい方を残す
         existing = seen.get(a.id)
+
         if existing is None or a.stocks_count > existing.stocks_count:
             seen[a.id] = a
+
     return list(seen.values())
 
 
@@ -231,12 +283,17 @@ def render_markdown(top: list[Article], since_date: str, today: str, total_uniqu
     lines.append(f"- 集計記事数: {total_unique} 件")
     lines.append("- ランキング基準: ストック数順")
     lines.append("")
-    lines.append("> 注意: このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。")
-    lines.append("> 「この1週間で増えたストック数ランキング」ではありません。")
+
+    lines.append(":::note warn")
+    lines.append("このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。")
+    lines.append("「この1週間で増えたストック数ランキング」ではありません。")
+    lines.append(":::")
     lines.append("")
 
     if not top:
+        lines.append(":::note info")
         lines.append("該当する記事が見つかりませんでした。")
+        lines.append(":::")
         lines.append("")
         return "\n".join(lines)
 
@@ -274,22 +331,40 @@ def render_markdown(top: list[Article], since_date: str, today: str, total_uniqu
 def write_csv(path: Path, top: list[Article]) -> None:
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
+
         writer.writerow([
-            "rank", "id", "title", "url", "user_id",
-            "stocks_count", "likes_count", "comments_count",
-            "page_views_count", "created_at", "tags",
+            "rank",
+            "id",
+            "title",
+            "url",
+            "user_id",
+            "stocks_count",
+            "likes_count",
+            "comments_count",
+            "page_views_count",
+            "created_at",
+            "tags",
         ])
+
         for i, a in enumerate(top, 1):
             writer.writerow([
-                i, a.id, a.title, a.url, a.user_id,
-                a.stocks_count, a.likes_count, a.comments_count,
+                i,
+                a.id,
+                a.title,
+                a.url,
+                a.user_id,
+                a.stocks_count,
+                a.likes_count,
+                a.comments_count,
                 a.page_views_count if a.page_views_count is not None else "",
-                a.created_at, ",".join(a.tags),
+                a.created_at,
+                ",".join(a.tags),
             ])
 
 
 def main() -> int:
     load_dotenv(".env")
+
     token = os.environ.get("QIITA_ACCESS_TOKEN") or None
 
     if token:
@@ -305,6 +380,7 @@ def main() -> int:
     print(f"[info] fetching tags={TARGET_TAGS} since {since_date} (JST)", file=sys.stderr)
 
     all_articles: list[Article] = []
+
     for tag in TARGET_TAGS:
         try:
             fetched = fetch_tag(tag, since_date, token)
@@ -312,7 +388,7 @@ def main() -> int:
             all_articles.extend(fetched)
         except Exception as e:
             print(f"[error] failed to fetch tag={tag}: {e}", file=sys.stderr)
-            # 他タグは続行 (片方失敗しても部分結果を出力する)
+            # 他タグは続行する
             continue
 
     unique = dedupe(all_articles)
@@ -320,11 +396,13 @@ def main() -> int:
     top = unique[:TOP_N]
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
     stamp = today_jst.strftime("%Y%m%d")
     md_path = OUTPUT_DIR / f"qiita_claude_ranking_{stamp}.md"
     csv_path = OUTPUT_DIR / f"qiita_claude_ranking_{stamp}.csv"
 
     md_text = render_markdown(top, since_date, today_str, len(unique))
+
     md_path.write_text(md_text, encoding="utf-8")
     write_csv(csv_path, top)
 
