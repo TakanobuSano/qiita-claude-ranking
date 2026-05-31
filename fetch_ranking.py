@@ -297,7 +297,6 @@ def render_markdown(
     lines.append(f"- 対象タグ: {target_tags_text}")
     lines.append(f"- 対象期間: {since_date} 〜 {today}")
     lines.append(f"- 集計記事数: {total_unique} 件")
-    lines.append("- ランキング基準: ストック数順")
     lines.append("")
 
     lines.append(":::note warn")
