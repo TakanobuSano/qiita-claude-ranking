@@ -5,8 +5,7 @@
 - ランキング基準: ストック数順
 
 :::note warn
-このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。
-「この1週間で増えたストック数ランキング」ではありません。
+このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。「この1週間で増えたストック数ランキング」ではありません。
 :::
 
 ## 1位 [16万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術](https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f)
@@ -27,7 +26,7 @@
 
 ## 3位 [これを読めば分かるClaude Code 完全攻略ガイド](https://qiita.com/s-furuya-nri/items/4385ac59ebefb923cf0d)
 
-◇ **20ストック**　♡ **27いいね**　/　[s-furuya-nri](https://qiita.com/s-furuya-nri) さん 2026-05-30 15時投稿
+◇ **20ストック**　♡ **28いいね**　/　[s-furuya-nri](https://qiita.com/s-furuya-nri) さん 2026-05-30 15時投稿
 
 `Claude` `AI駆動開発` `AIエージェント` `ClaudeCode` `2025JapanAWSJr.Champions`
 
