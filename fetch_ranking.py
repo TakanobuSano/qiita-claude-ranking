@@ -277,15 +277,18 @@ def escape_markdown_text(text: str) -> str:
 def render_markdown(top: list[Article], since_date: str, today: str, total_unique: int) -> str:
     lines: list[str] = []
 
+    target_tags_text = ", ".join(f"`{tag}`" for tag in TARGET_TAGS)
+
     lines.append("")
-    lines.append(f"- 対象タグ: {', '.join(TARGET_TAGS)}")
+    lines.append(f"- 対象タグ: {target_tags_text}")
     lines.append(f"- 対象期間: {since_date} 〜 {today}")
     lines.append(f"- 集計記事数: {total_unique} 件")
     lines.append("- ランキング基準: ストック数順")
     lines.append("")
 
     lines.append(":::note warn")
-    lines.append("このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。「この1週間で増えたストック数ランキング」ではありません。")
+    lines.append("このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。")
+    lines.append("「この1週間で増えたストック数ランキング」ではありません。")
     lines.append(":::")
     lines.append("")
 
