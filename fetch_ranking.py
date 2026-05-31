@@ -287,8 +287,7 @@ def render_markdown(top: list[Article], since_date: str, today: str, total_uniqu
     lines.append("")
 
     lines.append(":::note warn")
-    lines.append("このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。")
-    lines.append("「この1週間で増えたストック数ランキング」ではありません。")
+    lines.append("このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。「この1週間で増えたストック数ランキング」ではありません。")
     lines.append(":::")
     lines.append("")
 
