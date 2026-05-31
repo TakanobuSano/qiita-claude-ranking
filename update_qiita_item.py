@@ -24,7 +24,7 @@ from urllib import error, request
 OUTPUT_DIR = Path("output")
 QIITA_API_BASE = "https://qiita.com/api/v2/items"
 
-TITLE = "Qiita Claude関連タグ 注目ストック数ランキング【毎日自動更新】"
+TITLE = "Claude関連 注目ストック数ランキング【毎日自動更新】"
 
 EXPLANATION_ARTICLE_URL = "https://qiita.com/4q_sano/items/1bc5e0669a8f0166936c"
 GITHUB_REPOSITORY_URL = "https://github.com/TakanobuSano/qiita-claude-ranking"
