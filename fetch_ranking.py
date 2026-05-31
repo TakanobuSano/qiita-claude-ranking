@@ -288,15 +288,20 @@ def render_markdown(
     since_date: str,
     today: str,
     total_unique: int,
+    updated_at: str,
 ) -> str:
     lines: list[str] = []
 
     target_tags_text = ", ".join(f"`{tag}`" for tag in TARGET_TAGS)
 
     lines.append("")
+    lines.append(":::note info")
+    lines.append(f"最終更新: **{updated_at} JST**")
+    lines.append("")
     lines.append(f"- 対象タグ: {target_tags_text}")
     lines.append(f"- 対象期間: {since_date} 〜 {today}")
     lines.append(f"- 集計記事数: {total_unique} 件")
+    lines.append(":::")
     lines.append("")
 
     lines.append(":::note warn")
@@ -389,10 +394,12 @@ def main() -> int:
     else:
         print("[info] no QIITA_ACCESS_TOKEN found; running unauthenticated", file=sys.stderr)
 
-    today_jst = datetime.now(JST).date()
+    now_jst = datetime.now(JST)
+    today_jst = now_jst.date()
     since = today_jst - timedelta(days=LOOKBACK_DAYS)
     since_date = since.isoformat()
     today_str = today_jst.isoformat()
+    updated_at = now_jst.strftime("%Y-%m-%d %H:%M:%S")
 
     print(f"[info] fetching tags={TARGET_TAGS} since {since_date} (JST)", file=sys.stderr)
 
@@ -418,7 +425,13 @@ def main() -> int:
     md_path = OUTPUT_DIR / f"qiita_claude_ranking_{stamp}.md"
     csv_path = OUTPUT_DIR / f"qiita_claude_ranking_{stamp}.csv"
 
-    md_text = render_markdown(top, since_date, today_str, len(unique))
+    md_text = render_markdown(
+        top=top,
+        since_date=since_date,
+        today=today_str,
+        total_unique=len(unique),
+        updated_at=updated_at,
+    )
 
     md_path.write_text(md_text, encoding="utf-8")
     write_csv(csv_path, top)
