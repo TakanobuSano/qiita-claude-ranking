@@ -253,8 +253,8 @@ def render_markdown(top: list[Article], since_date: str, today: str, total_uniqu
         lines.append(f"## {i}位 [{title}]({a.url})")
         lines.append("")
         lines.append(
-            f"**{a.stocks_count}ストック**　"
-            f"**{a.likes_count}いいね**　/　"
+            f"📌 **{a.stocks_count}ストック**　"
+            f"❤️ **{a.likes_count}いいね**　/　"
             f"[{user_id}]({user_url}) さん {created}"
         )
         lines.append("")
