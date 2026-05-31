@@ -2,7 +2,7 @@
 """
 Qiita 記事ランキング取得スクリプト
 
-Qiita API v2 を使って、claude / ClaudeCode / MCP タグの記事を直近7日間で取得し、
+Qiita API v2 を使って、claude / ClaudeCode / MCP タグの記事を直近14日間で取得し、
 stocks_count 降順でランキング化して Markdown と CSV を出力する。
 
 - 認証: .env の QIITA_ACCESS_TOKEN (なければ非認証)
@@ -28,7 +28,7 @@ import urllib.request
 # ===== 設定 =====
 QIITA_API_BASE = "https://qiita.com/api/v2/items"
 TARGET_TAGS = ["claude", "ClaudeCode", "MCP"]
-LOOKBACK_DAYS = 7
+LOOKBACK_DAYS = 14
 PER_PAGE = 100  # Qiita API の上限
 MAX_PAGES = 10  # 念のための安全装置 (最大 100 * 10 = 1000 件)
 TOP_N = 20
@@ -87,7 +87,10 @@ class Article:
         )
 
 
-def http_get_json(url: str, headers: dict[str, str]) -> tuple[list[dict[str, Any]], dict[str, str]]:
+def http_get_json(
+    url: str,
+    headers: dict[str, str],
+) -> tuple[list[dict[str, Any]], dict[str, str]]:
     """
     Qiita API を叩いて (JSON, レスポンスヘッダ) を返す。
     429 / 5xx は指数バックオフで MAX_RETRY 回までリトライする。
@@ -114,7 +117,11 @@ def http_get_json(url: str, headers: dict[str, str]) -> tuple[list[dict[str, Any
             # 429 はレートリミット。Retry-After ヘッダがあれば従う
             if e.code == 429:
                 retry_after = e.headers.get("Retry-After")
-                wait = int(retry_after) if (retry_after and retry_after.isdigit()) else (2**attempt)
+                wait = (
+                    int(retry_after)
+                    if retry_after and retry_after.isdigit()
+                    else 2**attempt
+                )
 
                 print(
                     f"  [warn] 429 rate limit. waiting {wait}s "
@@ -206,7 +213,9 @@ def fetch_tag(tag: str, since_date: str, token: str | None) -> list[Article]:
                 print(f"  [warn] skip malformed item: {e}", file=sys.stderr)
 
         # レートリミット情報を見て、残数が少ない場合は軽く待つ
-        remaining = resp_headers.get("Rate-Limit-Remaining") or resp_headers.get("rate-limit-remaining")
+        remaining = resp_headers.get("Rate-Limit-Remaining") or resp_headers.get(
+            "rate-limit-remaining"
+        )
 
         if remaining is not None:
             try:
@@ -274,7 +283,12 @@ def escape_markdown_text(text: str) -> str:
     )
 
 
-def render_markdown(top: list[Article], since_date: str, today: str, total_unique: int) -> str:
+def render_markdown(
+    top: list[Article],
+    since_date: str,
+    today: str,
+    total_unique: int,
+) -> str:
     lines: list[str] = []
 
     target_tags_text = ", ".join(f"`{tag}`" for tag in TARGET_TAGS)
@@ -287,7 +301,10 @@ def render_markdown(top: list[Article], since_date: str, today: str, total_uniqu
     lines.append("")
 
     lines.append(":::note warn")
-    lines.append("このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。「この1週間で増えたストック数ランキング」ではありません。")
+    lines.append(
+        "このランキングは「直近14日間に投稿された記事の累計ストック数ランキング」です。"
+        "「この2週間で増えたストック数ランキング」ではありません。"
+    )
     lines.append(":::")
     lines.append("")
 
