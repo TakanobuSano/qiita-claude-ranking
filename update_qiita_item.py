@@ -18,22 +18,41 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from urllib import request, error
+from urllib import error, request
 
 
 OUTPUT_DIR = Path("output")
 QIITA_API_BASE = "https://qiita.com/api/v2/items"
 
+TITLE = "Qiita Claude関連タグ 注目ストック数ランキング【毎日自動更新】"
+
+EXPLANATION_ARTICLE_URL = "https://qiita.com/4q_sano/items/1bc5e0669a8f0166936c"
+GITHUB_REPOSITORY_URL = "https://github.com/TakanobuSano/qiita-claude-ranking"
+
 
 def find_latest_markdown() -> Path:
+    """
+    output/ 配下から最新の qiita_claude_ranking_*.md を取得する。
+    ファイル名の日付順に並べ、最後のファイルを最新として扱う。
+    """
     files = sorted(OUTPUT_DIR.glob("qiita_claude_ranking_*.md"))
+
     if not files:
-        raise FileNotFoundError("output/ 配下に qiita_claude_ranking_*.md が見つかりません。")
+        raise FileNotFoundError(
+            "output/ 配下に qiita_claude_ranking_*.md が見つかりません。"
+        )
+
     return files[-1]
 
 
 def extract_date_text(md_path: Path) -> str:
-    # 例: qiita_claude_ranking_20260528.md
+    """
+    ファイル名から更新日を抽出する。
+
+    例:
+    qiita_claude_ranking_20260528.md
+    -> 2026-05-28
+    """
     date_part = md_path.stem.replace("qiita_claude_ranking_", "")
 
     try:
@@ -44,6 +63,9 @@ def extract_date_text(md_path: Path) -> str:
 
 
 def build_body(md_path: Path) -> str:
+    """
+    最新Markdown本文に、ランキング説明用のフッターを追加する。
+    """
     body = md_path.read_text(encoding="utf-8")
     updated_date = extract_date_text(md_path)
 
@@ -58,17 +80,18 @@ def build_body(md_path: Path) -> str:
 - 最終更新日: {updated_date}
 - 更新頻度: 毎日自動更新
 - 更新方法: GitHub Actions と Qiita API v2 による自動更新
+- 補足: cron-job.org から `workflow_dispatch` を起動して更新しています
 - 対象タグ: `claude`, `ClaudeCode`, `MCP`
-- 集計基準: 直近7日間に投稿された記事の累計ストック数
-- 注意: 「この1週間で増えたストック数」ではなく、集計時点の累計 `stocks_count` によるランキングです。
+- 集計基準: 直近14日間に投稿された記事の累計ストック数
+- 注意: 「この2週間で増えたストック数」ではなく、集計時点の累計 `stocks_count` によるランキングです。
 
 ## 作成方法の解説
 
-https://qiita.com/4q_sano/items/1bc5e0669a8f0166936c
+{EXPLANATION_ARTICLE_URL}
 
 ## GitHubリポジトリ
 
-[qiita-claude-ranking](https://github.com/TakanobuSano/qiita-claude-ranking)
+[qiita-claude-ranking]({GITHUB_REPOSITORY_URL})
 """
 
     return body + footer
@@ -81,6 +104,10 @@ def update_qiita_item(
     private: bool,
     token: str,
 ) -> dict:
+    """
+    Qiita API v2 の PATCH /api/v2/items/:item_id を使って、
+    既存のQiita記事を上書き更新する。
+    """
     url = f"{QIITA_API_BASE}/{item_id}"
 
     payload = {
@@ -136,15 +163,14 @@ def main() -> int:
     md_path = find_latest_markdown()
     body = build_body(md_path)
 
-    title = "Qiita Claude関連タグ 週間ストック数ランキング【毎日自動更新】"
-
     print(f"[info] updating Qiita item: {item_id}", file=sys.stderr)
     print(f"[info] source markdown: {md_path}", file=sys.stderr)
     print(f"[info] private: {private}", file=sys.stderr)
+    print(f"[info] title: {TITLE}", file=sys.stderr)
 
     result = update_qiita_item(
         item_id=item_id,
-        title=title,
+        title=TITLE,
         body=body,
         private=private,
         token=token,
