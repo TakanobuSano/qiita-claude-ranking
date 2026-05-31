@@ -61,6 +61,14 @@ def build_body(md_path: Path) -> str:
 - 対象タグ: `claude`, `ClaudeCode`, `MCP`
 - 集計基準: 直近7日間に投稿された記事の累計ストック数
 - 注意: 「この1週間で増えたストック数」ではなく、集計時点の累計 `stocks_count` によるランキングです。
+
+## 作成方法の解説
+
+https://qiita.com/4q_sano/items/1bc5e0669a8f0166936c
+
+## GitHubリポジトリ
+
+[qiita-claude-ranking](https://github.com/TakanobuSano/qiita-claude-ranking)
 """
 
     return body + footer
