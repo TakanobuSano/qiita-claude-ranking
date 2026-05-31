@@ -1,7 +1,7 @@
 
 - 対象タグ: claude, ClaudeCode, MCP
 - 対象期間: 2026-05-24 〜 2026-05-31
-- 集計記事数: 333 件
+- 集計記事数: 338 件
 - ランキング基準: ストック数順
 
 > 注意: このランキングは「直近7日間に投稿された記事の累計ストック数ランキング」です。
@@ -33,7 +33,7 @@
 
 ## 4位 [これを読めば分かるClaude Code 完全攻略ガイド](https://qiita.com/s-furuya-nri/items/4385ac59ebefb923cf0d)
 
-**15ストック**　**20いいね**　/　[s-furuya-nri](https://qiita.com/s-furuya-nri) さん 2026-05-30 15時投稿
+**16ストック**　**23いいね**　/　[s-furuya-nri](https://qiita.com/s-furuya-nri) さん 2026-05-30 15時投稿
 
 `Claude` `AI駆動開発` `AIエージェント` `ClaudeCode` `2025JapanAWSJr.Champions`
 
@@ -49,7 +49,7 @@
 
 ## 6位 [出たてほやほやのClaude Opus 4.8を整理してみた](https://qiita.com/kaichan_dot/items/a5234436a61194e24df7)
 
-**9ストック**　**28いいね**　/　[kaichan_dot](https://qiita.com/kaichan_dot) さん 2026-05-29 04時投稿
+**9ストック**　**29いいね**　/　[kaichan_dot](https://qiita.com/kaichan_dot) さん 2026-05-29 04時投稿
 
 `AI` `駆け出しエンジニア` `LLM` `Claude` `ClaudeCode`
 
@@ -79,7 +79,15 @@
 
 ---
 
-## 10位 [AIへの依頼で毎回手戻りに疲れたので、指示書の作成自体をAIに任せた話](https://qiita.com/hirashima-gmoconnect/items/cd1ab7d541cc3047ae70)
+## 10位 [ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】](https://qiita.com/archeleeds/items/6ec24ba4942973a1ce0b)
+
+**6ストック**　**5いいね**　/　[archeleeds](https://qiita.com/archeleeds) さん 2026-05-30 15時投稿
+
+`Unity` `AI` `codex` `AI駆動開発` `ClaudeCode`
+
+---
+
+## 11位 [AIへの依頼で毎回手戻りに疲れたので、指示書の作成自体をAIに任せた話](https://qiita.com/hirashima-gmoconnect/items/cd1ab7d541cc3047ae70)
 
 **5ストック**　**9いいね**　/　[hirashima-gmoconnect](https://qiita.com/hirashima-gmoconnect) さん 2026-05-26 11時投稿
 
@@ -87,23 +95,23 @@
 
 ---
 
-## 11位 [Claude Opus 4.8 を読み解く――「賢さ」から「任せられるか」へ移った設計思想とDynamic Workflows](https://qiita.com/nogataka/items/266dcb5c7a08e25d09d8)
+## 12位 [Claude Opus 4.8 を読み解く――「賢さ」から「任せられるか」へ移った設計思想とDynamic Workflows](https://qiita.com/nogataka/items/266dcb5c7a08e25d09d8)
 
-**5ストック**　**7いいね**　/　[nogataka](https://qiita.com/nogataka) さん 2026-05-29 10時投稿
+**5ストック**　**8いいね**　/　[nogataka](https://qiita.com/nogataka) さん 2026-05-29 10時投稿
 
 `AI` `生成AI` `LLM` `Anthropic` `ClaudeCode`
 
 ---
 
-## 12位 [ClaudeCodeとCodexにコーディングを全て任せて商用レベルのUnityゲーム開発を行う【後編】](https://qiita.com/archeleeds/items/6ec24ba4942973a1ce0b)
+## 13位 [Claude Code x Obsidianで、LLM Wiki構築 | セッションを切り替えても会話を続けられる方法](https://qiita.com/usayamadausako/items/c8b5cca97554f6f64782)
 
-**5ストック**　**3いいね**　/　[archeleeds](https://qiita.com/archeleeds) さん 2026-05-30 15時投稿
+**4ストック**　**4いいね**　/　[usayamadausako](https://qiita.com/usayamadausako) さん 2026-05-30 13時投稿
 
-`Unity` `AI` `codex` `AI駆動開発` `ClaudeCode`
+`Obsidian` `ClaudeCode`
 
 ---
 
-## 13位 [【決定版】Claude Code 全設定リファレンス 2026 — CLAUDE.md / Hooks / Permissions / MCP を 1 ページで網羅](https://qiita.com/LemonCake/items/4f043eb440066319dfa6)
+## 14位 [【決定版】Claude Code 全設定リファレンス 2026 — CLAUDE.md / Hooks / Permissions / MCP を 1 ページで網羅](https://qiita.com/LemonCake/items/4f043eb440066319dfa6)
 
 **4ストック**　**0いいね**　/　[LemonCake](https://qiita.com/LemonCake) さん 2026-05-25 10時投稿
 
@@ -111,7 +119,7 @@
 
 ---
 
-## 14位 [Claude に E2E 回帰試験を振ったら呼び戻され続けた話 ── "段取り八分" を地で行く現場ノウハウ](https://qiita.com/ntaka329/items/af9551596ea5fa7a6f30)
+## 15位 [Claude に E2E 回帰試験を振ったら呼び戻され続けた話 ── "段取り八分" を地で行く現場ノウハウ](https://qiita.com/ntaka329/items/af9551596ea5fa7a6f30)
 
 **3ストック**　**6いいね**　/　[ntaka329](https://qiita.com/ntaka329) さん 2026-05-28 16時投稿
 
@@ -119,7 +127,7 @@
 
 ---
 
-## 15位 [Bedrock Tool Use から Aurora pgvector を直接叩く — Knowledge Bases を使わない RAG の組み立て](https://qiita.com/asahide/items/3e35c460e3b18606f1f3)
+## 16位 [Bedrock Tool Use から Aurora pgvector を直接叩く — Knowledge Bases を使わない RAG の組み立て](https://qiita.com/asahide/items/3e35c460e3b18606f1f3)
 
 **3ストック**　**5いいね**　/　[asahide](https://qiita.com/asahide) さん 2026-05-24 19時投稿
 
@@ -127,7 +135,7 @@
 
 ---
 
-## 16位 [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
+## 17位 [Claude Code Dynamic Workflows入門 — 並列サブエージェントで大規模タスクを自動化する](https://qiita.com/kai_kou/items/fe9b0e65e2252af773c9)
 
 **3ストック**　**5いいね**　/　[kai_kou](https://qiita.com/kai_kou) さん 2026-05-29 14時投稿
 
@@ -135,7 +143,7 @@
 
 ---
 
-## 17位 [あの手この手を試してもダメで、結局「読ませる形式」が問題だった話――CSVをYAMLに変えたら処理時間60%・使用量70%削減できた](https://qiita.com/inaba-yoshiko/items/410d83f31e8d8b606ba9)
+## 18位 [あの手この手を試してもダメで、結局「読ませる形式」が問題だった話――CSVをYAMLに変えたら処理時間60%・使用量70%削減できた](https://qiita.com/inaba-yoshiko/items/410d83f31e8d8b606ba9)
 
 **3ストック**　**4いいね**　/　[inaba-yoshiko](https://qiita.com/inaba-yoshiko) さん 2026-05-26 12時投稿
 
@@ -143,19 +151,11 @@
 
 ---
 
-## 18位 [AIのハルシネーションを見破る『セカンドオピニオン』調査術：Claude CodeとGitHub Copilotの比較検証フロー](https://qiita.com/oguri-gmoconnect/items/53986a41bfd50eee264e)
+## 19位 [AIのハルシネーションを見破る『セカンドオピニオン』調査術：Claude CodeとGitHub Copilotの比較検証フロー](https://qiita.com/oguri-gmoconnect/items/53986a41bfd50eee264e)
 
 **3ストック**　**4いいね**　/　[oguri-gmoconnect](https://qiita.com/oguri-gmoconnect) さん 2026-05-26 11時投稿
 
 `AI` `生産性向上` `GitHubCopilot` `LLM` `ClaudeCode`
-
----
-
-## 19位 [Claude Code x Obsidianで、LLM Wiki構築 | セッションを切り替えても会話を続けられる方法](https://qiita.com/usayamadausako/items/c8b5cca97554f6f64782)
-
-**3ストック**　**3いいね**　/　[usayamadausako](https://qiita.com/usayamadausako) さん 2026-05-30 13時投稿
-
-`Obsidian` `ClaudeCode`
 
 ---
 
