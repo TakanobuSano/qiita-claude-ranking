@@ -1,6 +1,6 @@
 rank,id,title,url,user_id,stocks_count,likes_count,comments_count,page_views_count,created_at,tags
 1,aeaee3e64e75076503fe,Claude Code を社内導入する時の最低限ガードレール5項目 — 機密情報を漏らさない設定パターン,https://qiita.com/ennagara128/items/aeaee3e64e75076503fe,ennagara128,172,158,1,,2026-05-17T12:40:01+09:00,"Security,AI,AI駆動開発,ClaudeCode,CLAUDE_md"
-2,dc26f7468dcd39fbe62f,16万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術,https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f,4q_sano,87,82,0,47000,2026-05-26T22:39:19+09:00,ClaudeCode
+2,dc26f7468dcd39fbe62f,16万スター超のCLAUDE.mdに学ぶ、Claude Codeを暴走させない運用術,https://qiita.com/4q_sano/items/dc26f7468dcd39fbe62f,4q_sano,87,82,0,47019,2026-05-26T22:39:19+09:00,ClaudeCode
 3,47a13155032f716a43bd,【Claude Code / Codex × GAS】コピペ脱出！Google Workspace自動化レシピ7選,https://qiita.com/TMiyamoto/items/47a13155032f716a43bd,TMiyamoto,30,42,0,,2026-05-27T13:17:37+09:00,"GoogleAppsScript,自動化,codex,生成AI,ClaudeCode"
 4,4385ac59ebefb923cf0d,これを読めば分かるClaude Code 完全攻略ガイド,https://qiita.com/s-furuya-nri/items/4385ac59ebefb923cf0d,s-furuya-nri,22,30,0,,2026-05-30T15:45:08+09:00,"Claude,AI駆動開発,AIエージェント,ClaudeCode,2025JapanAWSJr.Champions"
 5,548e71c8ff17fc543442,【Claude Code】激詰レビュワーSKILL 〜分からないコードをPRに出すな〜,https://qiita.com/kotobuki5991/items/548e71c8ff17fc543442,kotobuki5991,20,25,0,,2026-05-20T16:52:41+09:00,"レビュー,AI,SKILLS,Claude,ClaudeCode"
