@@ -346,14 +346,6 @@ def render_markdown(
             lines.append("---")
             lines.append("")
 
-    lines.append(":::note warn")
-    lines.append(
-        "このランキングは「直近14日間に投稿された記事の累計ストック数ランキング」です。"
-        "「この2週間で増えたストック数ランキング」ではありません。"
-    )
-    lines.append(":::")
-    lines.append("")
-
     return "\n".join(lines)
 
 
