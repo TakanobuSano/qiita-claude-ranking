@@ -94,7 +94,7 @@ def build_body(md_path: Path) -> str:
 
 ## GitHubリポジトリ
 
-[qiita-claude-ranking]({GITHUB_REPOSITORY_URL})
+{GITHUB_REPOSITORY_URL}
 """
 
     return body + footer
