@@ -85,8 +85,8 @@ jobs:
         run: |
           python update_qiita_item.py
 
-      - name: Post ranking summary to Teams
-        env:
-          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
-        run: |
-          python post_to_teams.py
+#      - name: Post ranking summary to Teams
+#        env:
+#          TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
+#        run: |
+#          python post_to_teams.py
