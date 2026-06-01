@@ -1,6 +1,6 @@
 
 :::note info
-最終更新: **2026-06-01 15:23:11 JST**
+最終更新: **2026-06-01 15:29:16 JST**
 
 - 対象タグ: `claude`, `ClaudeCode`, `MCP`
 - 対象期間: 2026-05-18 〜 2026-06-01
@@ -46,7 +46,7 @@
 
 ## 5位 [Claude Code x Obsidianで、LLM Wiki構築 | セッションを切り替えても会話を続けられる方法](https://qiita.com/usayamadausako/items/c8b5cca97554f6f64782)
 
-◇ **21ストック**（前日比 +12） ♡ **19いいね**（前日比 +13） / [usayamadausako](https://qiita.com/usayamadausako) さん 2026-05-30 13時投稿
+◇ **21ストック**（前日比 +12） ♡ **20いいね**（前日比 +14） / [usayamadausako](https://qiita.com/usayamadausako) さん 2026-05-30 13時投稿
 
 `Obsidian` `ClaudeCode`
 
@@ -142,7 +142,7 @@
 
 ## 17位 [学習が続かないエンジニアへ。仲間と一緒に成長できるコミュニティを作りました](https://qiita.com/ari_init/items/747c997d65ac873addd1)
 
-◇ **9ストック**（前日比 +2） ♡ **12いいね**（前日比 +2） / [ari_init](https://qiita.com/ari_init) さん 2026-05-29 09時投稿
+◇ **9ストック**（前日比 +2） ♡ **13いいね**（前日比 +3） / [ari_init](https://qiita.com/ari_init) さん 2026-05-29 09時投稿
 
 `GitHub` `初心者` `AI` `学習記録` `ClaudeCode`
 
