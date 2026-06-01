@@ -469,14 +469,6 @@ def render_markdown(
         lines.append("")
         return "\n".join(lines)
 
-    lines.append(":::note warn")
-    lines.append(
-        "このランキングは「直近14日間に投稿された記事の累計ストック数ランキング」です。"
-        "前日比は、前回保存されたCSVとの差分です。"
-    )
-    lines.append(":::")
-    lines.append("")
-
     for i, a in enumerate(top, 1):
         title = escape_markdown_text(a.title)
         user_id = a.user_id
