@@ -5,14 +5,13 @@ Qiita 記事ランキング取得スクリプト。
 Qiita API v2 を使って、claude / ClaudeCode / MCP タグの記事を直近14日間で取得し、
 stocks_count 降順でランキング化して Markdown と CSV を出力する。
 
-追加機能:
-- 前回CSVと比較して、ストック数・いいね数の前回比を表示する
-- Qiita記事本文にも「前日比 +N」を表示する
-- CSVにも差分列を出力する
-
-前提:
-- output/ に過去の qiita_claude_ranking_YYYYMMDD.csv が残っていること
-- 過去CSVがない場合は「比較データなし」として処理する
+主な機能:
+- 直近14日間の対象タグ記事を取得
+- 記事IDで重複排除
+- ストック数順でランキング化
+- output/ に Markdown / CSV を保存
+- 前回CSVと比較して、ストック数・いいね数の差分を算出
+- Qiita記事上では見やすさ優先で「（+54）」のように差分のみ表示する
 """
 
 from __future__ import annotations
@@ -29,8 +28,6 @@ from urllib.parse import urlencode
 import urllib.error
 import urllib.request
 
-
-# ===== 設定 =====
 
 QIITA_API_BASE = "https://qiita.com/api/v2/items"
 
@@ -49,8 +46,6 @@ OUTPUT_FILE_PREFIX = "qiita_claude_ranking_"
 
 JST = timezone(timedelta(hours=9))
 
-
-# ===== .env 読み込み =====
 
 def load_dotenv(path: str = ".env") -> None:
     p = Path(path)
@@ -84,7 +79,6 @@ class Article:
     created_at: str
     tags: list[str] = field(default_factory=list)
 
-    # 前回比
     stocks_delta: int | None = None
     likes_delta: int | None = None
     previous_rank: int | None = None
@@ -111,8 +105,8 @@ def http_get_json(
     headers: dict[str, str],
 ) -> tuple[list[dict[str, Any]], dict[str, str]]:
     """
-    Qiita API を叩いて (JSON, レスポンスヘッダ) を返す。
-    429 / 5xx は指数バックオフで MAX_RETRY 回までリトライする。
+    Qiita API を叩いて、JSON とレスポンスヘッダを返す。
+    429 / 5xx は指数バックオフでリトライする。
     """
     last_err: Exception | None = None
 
@@ -259,14 +253,14 @@ def dedupe(articles: Iterable[Article]) -> list[Article]:
     """
     seen: dict[str, Article] = {}
 
-    for a in articles:
-        if not a.id:
+    for article in articles:
+        if not article.id:
             continue
 
-        existing = seen.get(a.id)
+        existing = seen.get(article.id)
 
-        if existing is None or a.stocks_count > existing.stocks_count:
-            seen[a.id] = a
+        if existing is None or article.stocks_count > existing.stocks_count:
+            seen[article.id] = article
 
     return list(seen.values())
 
@@ -300,10 +294,9 @@ def find_previous_csv(today_stamp: str) -> Path | None:
     """
     output/ から、今日より前の最新CSVを探す。
 
-    例:
     今日が 20260601 の場合、
     qiita_claude_ranking_20260531.csv があればそれを使う。
-    20260531 がなければ、20260530 など最新の過去CSVを使う。
+    なければ、20260530 など最新の過去CSVを使う。
     """
     if not OUTPUT_DIR.exists():
         return None
@@ -413,7 +406,14 @@ def apply_deltas(top: list[Article], previous_snapshot: dict[str, dict[str, int]
 
 def format_delta(delta: int | None) -> str:
     """
-    前回比の表示文字列を作る。
+    Qiita記事本文で使う差分表示を作る。
+    見やすさ優先のため、「前日比」「前回比」は本文には出さない。
+
+    例:
+    +54
+    ±0
+    -2
+    新規
     """
     if delta is None:
         return "新規"
@@ -448,16 +448,9 @@ def render_markdown(
     lines.append(f"- 集計記事数: {total_unique} 件")
 
     if previous_csv_path:
-        previous_date = previous_csv_path.stem.replace(OUTPUT_FILE_PREFIX, "")
-        try:
-            previous_dt = datetime.strptime(previous_date, "%Y%m%d")
-            previous_text = previous_dt.strftime("%Y-%m-%d")
-        except ValueError:
-            previous_text = previous_date
-
-        lines.append(f"- 前回比較: {previous_text} のCSVと比較")
+        lines.append("- 比較: 前回更新時点との差分")
     else:
-        lines.append("- 前回比較: 比較データなし")
+        lines.append("- 比較: なし")
 
     lines.append(":::")
     lines.append("")
@@ -469,20 +462,20 @@ def render_markdown(
         lines.append("")
         return "\n".join(lines)
 
-    for i, a in enumerate(top, 1):
-        title = escape_markdown_text(a.title)
-        user_id = a.user_id
+    for i, article in enumerate(top, 1):
+        title = escape_markdown_text(article.title)
+        user_id = article.user_id
         user_url = f"https://qiita.com/{user_id}" if user_id else ""
-        created = format_created_at(a.created_at)
+        created = format_created_at(article.created_at)
 
         tag_badges = " ".join(
-            f"`{tag}`" for tag in a.tags[:5] if tag
+            f"`{tag}`" for tag in article.tags[:5] if tag
         )
 
-        stocks_delta_text = format_delta(a.stocks_delta)
-        likes_delta_text = format_delta(a.likes_delta)
+        stocks_delta_text = format_delta(article.stocks_delta)
+        likes_delta_text = format_delta(article.likes_delta)
 
-        lines.append(f"## {i}位 [{title}]({a.url})")
+        lines.append(f"## {i}位 [{title}]({article.url})")
         lines.append("")
 
         user_part = (
@@ -492,8 +485,8 @@ def render_markdown(
         )
 
         lines.append(
-            f"◇ **{a.stocks_count}ストック**（前日比 {stocks_delta_text}） "
-            f"♡ **{a.likes_count}いいね**（前日比 {likes_delta_text}） / "
+            f"◇ **{article.stocks_count}ストック**（{stocks_delta_text}） "
+            f"♡ **{article.likes_count}いいね**（{likes_delta_text}） / "
             f"{user_part} {created}"
         )
 
@@ -534,24 +527,24 @@ def write_csv(path: Path, top: list[Article]) -> None:
             ]
         )
 
-        for i, a in enumerate(top, 1):
+        for i, article in enumerate(top, 1):
             writer.writerow(
                 [
                     i,
-                    a.id,
-                    a.title,
-                    a.url,
-                    a.user_id,
-                    a.stocks_count,
-                    "" if a.stocks_delta is None else a.stocks_delta,
-                    a.likes_count,
-                    "" if a.likes_delta is None else a.likes_delta,
-                    "" if a.previous_rank is None else a.previous_rank,
-                    "" if a.rank_delta is None else a.rank_delta,
-                    a.comments_count,
-                    a.page_views_count if a.page_views_count is not None else "",
-                    a.created_at,
-                    ",".join(a.tags),
+                    article.id,
+                    article.title,
+                    article.url,
+                    article.user_id,
+                    article.stocks_count,
+                    "" if article.stocks_delta is None else article.stocks_delta,
+                    article.likes_count,
+                    "" if article.likes_delta is None else article.likes_delta,
+                    "" if article.previous_rank is None else article.previous_rank,
+                    "" if article.rank_delta is None else article.rank_delta,
+                    article.comments_count,
+                    article.page_views_count if article.page_views_count is not None else "",
+                    article.created_at,
+                    ",".join(article.tags),
                 ]
             )
 
