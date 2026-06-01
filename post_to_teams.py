@@ -9,8 +9,8 @@
 - 各記事タイトルがTeams上で巨大見出しにならないようにする
 - 「1位」「2位」などの順位部分はリンクにせず、太字にする
 - 記事タイトルのみリンクにし、タイトルも太字にする
-- Qiita記事側に表示された前日比をTeamsにも表示する
-- 11位以降はQiita記事へのリンクから確認してもらう
+- Qiita記事側に表示された差分をTeamsにも表示する
+- 一般社員向けに、GitHubリンクではなくQiita記事リンクを優先する
 
 必要な環境変数:
 - TEAMS_WEBHOOK_URL
@@ -30,8 +30,11 @@ from urllib import error, request
 OUTPUT_DIR = Path("output")
 OUTPUT_FILE_PATTERN = "qiita_claude_ranking_*.md"
 
+# メインのClaude関連記事ランキング
 ARTICLE_URL = "https://qiita.com/4q_sano/items/b2100c31a1fb61116ace"
-GITHUB_REPOSITORY_URL = "https://github.com/TakanobuSano/qiita-claude-ranking"
+
+# 補足リンク: Claude Code向けMCP・関連ツール候補ランキング
+RELATED_TOOLS_URL = "https://qiita.com/4q_sano/items/1d98dd5fb49ce99bd288"
 
 MAX_RANKING_ITEMS = 10
 
@@ -77,11 +80,13 @@ def extract_summary_info(markdown: str) -> dict[str, str]:
     最終更新: **2026-06-01 15:29:16 JST**
     - 対象期間: 2026-05-18 〜 2026-06-01
     - 集計記事数: 649 件
+    - 比較: 前回更新時点との差分
     """
     info = {
         "last_updated": "",
         "target_period": "",
         "article_count": "",
+        "comparison": "",
     }
 
     last_updated_match = re.search(r"最終更新:\s*\*\*(.*?)\*\*", markdown)
@@ -95,6 +100,10 @@ def extract_summary_info(markdown: str) -> dict[str, str]:
     article_count_match = re.search(r"集計記事数:\s*(.+)", markdown)
     if article_count_match:
         info["article_count"] = article_count_match.group(1).strip()
+
+    comparison_match = re.search(r"比較:\s*(.+)", markdown)
+    if comparison_match:
+        info["comparison"] = comparison_match.group(1).strip()
 
     return info
 
@@ -143,10 +152,17 @@ def split_ranking_blocks(markdown: str) -> list[str]:
 
 def normalize_delta(delta_text: str) -> str:
     """
-    Qiita側の「前日比 +3」「+3」「±0」「新規」などをTeams表示向けに整える。
+    Qiita側の差分表示をTeams表示向けに整える。
+
+    対応例:
+    - 前日比 +3
+    - +3
+    - ±0
+    - 新規
     """
     value = delta_text.strip()
     value = value.replace("前日比", "").strip()
+    value = value.replace("前回比", "").strip()
     value = value.replace("　", " ").strip()
 
     return value
@@ -159,6 +175,9 @@ def parse_ranking_block(block: str) -> dict[str, object]:
     対応する想定例:
     ## 1位 [記事タイトル](https://qiita.com/...)
 
+    ◇ **100ストック**（+8） ♡ **102いいね**（+5） / [user](https://qiita.com/user) さん 2026-05-30 15時投稿
+
+    または:
     ◇ **100ストック**（前日比 +8） ♡ **102いいね**（前日比 +5） / [user](https://qiita.com/user) さん 2026-05-30 15時投稿
 
     `Claude` `ClaudeCode`
@@ -191,7 +210,7 @@ def parse_ranking_block(block: str) -> dict[str, object]:
             result["title"] = simple_heading_match.group(2)
 
     stocks_match = re.search(
-        r"◇\s*\*\*(\d+)ストック\*\*(?:[（(]\s*前日比\s*([^）)]+)\s*[）)])?",
+        r"◇\s*\*\*(\d+)ストック\*\*(?:[（(]\s*(?:前日比|前回比)?\s*([^）)]+)\s*[）)])?",
         block,
     )
     if stocks_match:
@@ -200,7 +219,7 @@ def parse_ranking_block(block: str) -> dict[str, object]:
             result["stocks_delta"] = normalize_delta(stocks_match.group(2))
 
     likes_match = re.search(
-        r"♡\s*\*\*(\d+)いいね\*\*(?:[（(]\s*前日比\s*([^）)]+)\s*[）)])?",
+        r"♡\s*\*\*(\d+)いいね\*\*(?:[（(]\s*(?:前日比|前回比)?\s*([^）)]+)\s*[）)])?",
         block,
     )
     if likes_match:
@@ -221,7 +240,7 @@ def parse_ranking_block(block: str) -> dict[str, object]:
 
 def format_metric_with_delta(label: str, value: str, delta: str) -> str:
     """
-    Teams表示用に、ストック数・いいね数と前日比を整形する。
+    Teams表示用に、ストック数・いいね数と差分を整形する。
 
     例:
     ◇ 100ストック（+8）
@@ -247,7 +266,7 @@ def build_item_text(item: dict[str, object]) -> str:
     - 記事タイトルのみリンクにする
     - 記事タイトルも太字リンクにする
     - 既存の3行構成は維持する
-    - 前日比がある場合は、ストック数・いいね数の横に表示する
+    - 差分がある場合は、ストック数・いいね数の横に表示する
     """
     rank = str(item.get("rank", "")).strip()
     title = str(item.get("title", "")).strip()
@@ -344,6 +363,9 @@ def build_adaptive_card_payload(
     if summary_info.get("article_count"):
         summary_lines.append(f"集計記事数: {summary_info['article_count']}")
 
+    if summary_info.get("comparison"):
+        summary_lines.append(f"比較: {summary_info['comparison']}")
+
     if summary_lines:
         body.append(
             {
@@ -402,13 +424,13 @@ def build_adaptive_card_payload(
                     "actions": [
                         {
                             "type": "Action.OpenUrl",
-                            "title": "Qiita記事で全文を見る",
+                            "title": "Claude関連記事ランキングを見る",
                             "url": ARTICLE_URL,
                         },
                         {
                             "type": "Action.OpenUrl",
-                            "title": "GitHubリポジトリを開く",
-                            "url": GITHUB_REPOSITORY_URL,
+                            "title": "Claude Code関連ツールランキングを見る",
+                            "url": RELATED_TOOLS_URL,
                         },
                     ],
                 },
