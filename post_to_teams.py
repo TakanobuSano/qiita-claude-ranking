@@ -28,7 +28,7 @@ from urllib import error, request
 OUTPUT_DIR = Path("output")
 OUTPUT_FILE_PATTERN = "qiita_claude_ranking_*.md"
 
-ARTICLE_URL = "https://qiita.com/4q_sano/items/1d98dd5fb49ce99bd288"
+ARTICLE_URL = "https://qiita.com/4q_sano/items/b2100c31a1fb61116ace"
 GITHUB_REPOSITORY_URL = "https://github.com/TakanobuSano/qiita-claude-ranking"
 
 MAX_RANKING_ITEMS = 10
