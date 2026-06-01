@@ -7,6 +7,7 @@
 - Qiita用MarkdownをTeams向けに整形する
 - 1位〜10位のみを1つのAdaptive Cardで投稿する
 - 各記事タイトルがTeams上で巨大見出しにならないようにする
+- Qiita記事側に表示された前日比をTeamsにも表示する
 - 11位以降はQiita記事へのリンクから確認してもらう
 
 必要な環境変数:
@@ -118,14 +119,26 @@ def split_ranking_blocks(markdown: str) -> list[str]:
     return blocks[:MAX_RANKING_ITEMS]
 
 
+def normalize_delta(delta_text: str) -> str:
+    """
+    Qiita側の「前日比 +3」「+3」「±0」「新規」などをTeams表示向けに整える。
+    """
+    value = delta_text.strip()
+
+    value = value.replace("前日比", "").strip()
+    value = value.replace("　", " ").strip()
+
+    return value
+
+
 def parse_ranking_block(block: str) -> dict[str, object]:
     """
     1つのランキングブロックから必要情報を抽出する。
 
-    想定例:
-    ## 1位 [これを読めば分かるClaude Code 完全攻略ガイド](https://qiita.com/...)
+    対応する想定例:
+    ## 1位 [記事タイトル](https://qiita.com/...)
 
-    ◇ **100ストック**　♡ **102いいね**　/　[s-furuya-nri](https://qiita.com/...) さん 2026-05-30 15時投稿
+    ◇ **100ストック**（前日比 +8） ♡ **102いいね**（前日比 +5） / [user](https://qiita.com/user) さん 2026-05-30 15時投稿
 
     `Claude` `ClaudeCode`
     """
@@ -137,7 +150,9 @@ def parse_ranking_block(block: str) -> dict[str, object]:
         "title": heading,
         "url": "",
         "stocks": "",
+        "stocks_delta": "",
         "likes": "",
+        "likes_delta": "",
         "author": "",
         "posted_at": "",
         "tags": [],
@@ -154,13 +169,23 @@ def parse_ranking_block(block: str) -> dict[str, object]:
             result["rank"] = simple_heading_match.group(1)
             result["title"] = simple_heading_match.group(2)
 
-    stocks_match = re.search(r"◇\s*\*\*(\d+)ストック\*\*", block)
+    stocks_match = re.search(
+        r"◇\s*\*\*(\d+)ストック\*\*(?:[（(]\s*前日比\s*([^）)]+)\s*[）)])?",
+        block,
+    )
     if stocks_match:
         result["stocks"] = stocks_match.group(1)
+        if stocks_match.group(2):
+            result["stocks_delta"] = normalize_delta(stocks_match.group(2))
 
-    likes_match = re.search(r"♡\s*\*\*(\d+)いいね\*\*", block)
+    likes_match = re.search(
+        r"♡\s*\*\*(\d+)いいね\*\*(?:[（(]\s*前日比\s*([^）)]+)\s*[）)])?",
+        block,
+    )
     if likes_match:
         result["likes"] = likes_match.group(1)
+        if likes_match.group(2):
+            result["likes_delta"] = normalize_delta(likes_match.group(2))
 
     author_match = re.search(r"/\s*\[(.*?)\]\(.*?\)\s*さん\s*(.+?投稿)", block)
     if author_match:
@@ -173,6 +198,24 @@ def parse_ranking_block(block: str) -> dict[str, object]:
     return result
 
 
+def format_metric_with_delta(label: str, value: str, delta: str) -> str:
+    """
+    Teams表示用に、ストック数・いいね数と前日比を整形する。
+
+    例:
+    ◇ 100ストック（+8）
+    ♡ 102いいね（±0）
+    ◇ 12ストック（新規）
+    """
+    if not value:
+        return ""
+
+    if delta:
+        return f"{label} {value}（{delta}）"
+
+    return f"{label} {value}"
+
+
 def build_item_text(item: dict[str, object]) -> str:
     """
     Teamsカード内に表示する1記事分のテキストを作成する。
@@ -181,12 +224,18 @@ def build_item_text(item: dict[str, object]) -> str:
     - Qiita Markdownの「## 1位 ...」はTeamsに渡さない
     - 通常サイズの太字リンクとして表示する
     - 既存の3行構成は維持する
+    - 前日比がある場合は、ストック数・いいね数の横に表示する
     """
     rank = str(item.get("rank", "")).strip()
     title = str(item.get("title", "")).strip()
     url = str(item.get("url", "")).strip()
+
     stocks = str(item.get("stocks", "")).strip()
+    stocks_delta = str(item.get("stocks_delta", "")).strip()
+
     likes = str(item.get("likes", "")).strip()
+    likes_delta = str(item.get("likes_delta", "")).strip()
+
     author = str(item.get("author", "")).strip()
     posted_at = str(item.get("posted_at", "")).strip()
     tags = item.get("tags", [])
@@ -200,11 +249,13 @@ def build_item_text(item: dict[str, object]) -> str:
 
     metrics: list[str] = []
 
-    if stocks:
-        metrics.append(f"◇ {stocks}ストック")
+    stock_text = format_metric_with_delta("◇", f"{stocks}ストック", stocks_delta)
+    if stock_text:
+        metrics.append(stock_text)
 
-    if likes:
-        metrics.append(f"♡ {likes}いいね")
+    like_text = format_metric_with_delta("♡", f"{likes}いいね", likes_delta)
+    if like_text:
+        metrics.append(like_text)
 
     if author:
         metrics.append(f"{author} さん")
