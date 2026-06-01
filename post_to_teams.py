@@ -7,6 +7,8 @@
 - Qiita用MarkdownをTeams向けに整形する
 - 1位〜10位のみを1つのAdaptive Cardで投稿する
 - 各記事タイトルがTeams上で巨大見出しにならないようにする
+- 「1位」「2位」などの順位部分はリンクにせず、太字にする
+- 記事タイトルのみリンクにし、タイトルも太字にする
 - Qiita記事側に表示された前日比をTeamsにも表示する
 - 11位以降はQiita記事へのリンクから確認してもらう
 
@@ -35,6 +37,12 @@ MAX_RANKING_ITEMS = 10
 
 
 def find_latest_markdown() -> Path:
+    """
+    output/ 配下から最新のランキングMarkdownを取得する。
+
+    ファイル名が qiita_claude_ranking_YYYYMMDD.md 形式なので、
+    名前順の最後を最新として扱う。
+    """
     files = sorted(OUTPUT_DIR.glob(OUTPUT_FILE_PATTERN))
 
     if not files:
@@ -46,6 +54,12 @@ def find_latest_markdown() -> Path:
 
 
 def extract_date_text(md_path: Path) -> str:
+    """
+    ファイル名から更新日を抽出する。
+
+    例:
+    qiita_claude_ranking_20260601.md -> 2026-06-01
+    """
     date_part = md_path.stem.replace("qiita_claude_ranking_", "")
 
     try:
@@ -56,6 +70,14 @@ def extract_date_text(md_path: Path) -> str:
 
 
 def extract_summary_info(markdown: str) -> dict[str, str]:
+    """
+    Markdown内の概要情報を可能な範囲で抽出する。
+
+    想定:
+    最終更新: **2026-06-01 15:29:16 JST**
+    - 対象期間: 2026-05-18 〜 2026-06-01
+    - 集計記事数: 649 件
+    """
     info = {
         "last_updated": "",
         "target_period": "",
@@ -124,7 +146,6 @@ def normalize_delta(delta_text: str) -> str:
     Qiita側の「前日比 +3」「+3」「±0」「新規」などをTeams表示向けに整える。
     """
     value = delta_text.strip()
-
     value = value.replace("前日比", "").strip()
     value = value.replace("　", " ").strip()
 
@@ -222,7 +243,9 @@ def build_item_text(item: dict[str, object]) -> str:
 
     重要:
     - Qiita Markdownの「## 1位 ...」はTeamsに渡さない
-    - 通常サイズの太字リンクとして表示する
+    - 「1位」「2位」など順位部分はリンクにせず太字にする
+    - 記事タイトルのみリンクにする
+    - 記事タイトルも太字リンクにする
     - 既存の3行構成は維持する
     - 前日比がある場合は、ストック数・いいね数の横に表示する
     """
@@ -240,12 +263,16 @@ def build_item_text(item: dict[str, object]) -> str:
     posted_at = str(item.get("posted_at", "")).strip()
     tags = item.get("tags", [])
 
-    title_text = f"{rank}位 {title}" if rank else title
-
-    if url:
-        first_line = f"**[{title_text}]({url})**"
+    if rank:
+        if url:
+            first_line = f"**{rank}位** **[{title}]({url})**"
+        else:
+            first_line = f"**{rank}位** **{title}**"
     else:
-        first_line = f"**{title_text}**"
+        if url:
+            first_line = f"**[{title}]({url})**"
+        else:
+            first_line = f"**{title}**"
 
     metrics: list[str] = []
 
