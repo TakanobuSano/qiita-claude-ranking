@@ -29,7 +29,7 @@ jobs:
         run: |
           python fetch_ranking.py
 
-      - name: Keep latest 5 days of output files
+      - name: Keep latest 30 days of output files
         run: |
           python - <<'PY'
           from pathlib import Path
@@ -50,8 +50,8 @@ jobs:
               date_text = match.group(1)
               files_by_date[date_text].append(path)
 
-          # 日付の新しい順に並べて、最新5日分だけ残す
-          keep_dates = set(sorted(files_by_date.keys(), reverse=True)[:5])
+          # 日付の新しい順に並べて、最新30日分だけ残す
+          keep_dates = set(sorted(files_by_date.keys(), reverse=True)[:30])
 
           for date_text, paths in files_by_date.items():
               if date_text in keep_dates:
