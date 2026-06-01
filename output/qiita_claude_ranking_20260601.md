@@ -1,6 +1,6 @@
 
 :::note info
-最終更新: **2026-06-01 16:17:01 JST**
+最終更新: **2026-06-01 16:32:57 JST**
 
 - 対象タグ: `claude`, `ClaudeCode`, `MCP`
 - 対象期間: 2026-05-18 〜 2026-06-01
@@ -10,7 +10,7 @@
 
 ## 1位 [これを読めば分かるClaude Code 完全攻略ガイド](https://qiita.com/s-furuya-nri/items/4385ac59ebefb923cf0d)
 
-◇ **113ストック**（+56） ♡ **111いいね**（+47） / [s-furuya-nri](https://qiita.com/s-furuya-nri) さん 2026-05-30 15時投稿
+◇ **115ストック**（+58） ♡ **114いいね**（+50） / [s-furuya-nri](https://qiita.com/s-furuya-nri) さん 2026-05-30 15時投稿
 
 `Claude` `AI駆動開発` `AIエージェント` `ClaudeCode` `2025JapanAWSJr.Champions`
 
@@ -42,7 +42,7 @@
 
 ## 5位 [Claude Code x Obsidianで、LLM Wiki構築 | セッションを切り替えても会話を続けられる方法](https://qiita.com/usayamadausako/items/c8b5cca97554f6f64782)
 
-◇ **21ストック**（+12） ♡ **20いいね**（+14） / [usayamadausako](https://qiita.com/usayamadausako) さん 2026-05-30 13時投稿
+◇ **22ストック**（+13） ♡ **21いいね**（+15） / [usayamadausako](https://qiita.com/usayamadausako) さん 2026-05-30 13時投稿
 
 `Obsidian` `ClaudeCode`
 
