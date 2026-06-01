@@ -55,7 +55,7 @@ def build_teams_message(md_path: Path) -> str:
 {updated_date}
 
 概要:
-Qiitaの `claude` / `ClaudeCode` / `MCP` タグ記事を対象に、直近7日間に投稿された記事をストック数順で集計しました。
+Qiitaの `claude` / `ClaudeCode` / `MCP` タグ記事を対象に、直近14日間に投稿された記事をストック数順で集計しました。
 
 ランキング:
 {ranking_body}
