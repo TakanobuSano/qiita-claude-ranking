@@ -43,6 +43,7 @@ jobs:
 
           for path in output_dir.glob("qiita_claude_ranking_*.*"):
               match = pattern.match(path.name)
+
               if not match:
                   continue
 
@@ -85,7 +86,21 @@ jobs:
         run: |
           python update_qiita_item.py
 
+      - name: Check Teams posting day
+        id: teams_day
+        run: |
+          day_of_week=$(TZ=Asia/Tokyo date +%u)
+
+          echo "JST day_of_week=${day_of_week}"
+
+          if [ "$day_of_week" = "3" ]; then
+            echo "should_post=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "should_post=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Post ranking summary to Teams
+        if: steps.teams_day.outputs.should_post == 'true'
         env:
           TEAMS_WEBHOOK_URL: ${{ secrets.TEAMS_WEBHOOK_URL }}
         run: |
