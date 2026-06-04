@@ -11,6 +11,8 @@ stocks_count 降順でランキング化して Markdown と CSV を出力する�
 - ストック数順でランキング化
 - output/ に Markdown / CSV を保存
 - 前回CSVと比較して、ストック数・いいね数の差分を算出
+- Markdown は表示用として上位20件のみ出力
+- CSV は将来の急上昇ランキング用に取得対象の全件を出力
 - Qiita記事上では見やすさ優先で「（+54）」のように差分のみ表示する
 """
 
@@ -25,6 +27,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urlencode
+
 import urllib.error
 import urllib.request
 
@@ -378,11 +381,13 @@ def load_previous_snapshot(csv_path: Path | None) -> dict[str, dict[str, int]]:
     return snapshot
 
 
-def apply_deltas(top: list[Article], previous_snapshot: dict[str, dict[str, int]]) -> None:
+def apply_deltas(articles: list[Article], previous_snapshot: dict[str, dict[str, int]]) -> None:
     """
-    現在のランキングに前回比を付与する。
+    現在の記事リストに前回比を付与する。
+
+    CSVを全件保存するため、ここでは top ではなく unique 全件に対して差分を付ける。
     """
-    for current_rank, article in enumerate(top, start=1):
+    for current_rank, article in enumerate(articles, start=1):
         previous = previous_snapshot.get(article.id)
 
         if previous is None:
@@ -503,7 +508,7 @@ def render_markdown(
     return "\n".join(lines)
 
 
-def write_csv(path: Path, top: list[Article]) -> None:
+def write_csv(path: Path, articles: list[Article]) -> None:
     with path.open("w", encoding="utf-8", newline="") as f:
         writer = csv.writer(f)
 
@@ -527,7 +532,7 @@ def write_csv(path: Path, top: list[Article]) -> None:
             ]
         )
 
-        for i, article in enumerate(top, 1):
+        for i, article in enumerate(articles, 1):
             writer.writerow(
                 [
                     i,
@@ -587,13 +592,15 @@ def main() -> int:
     unique = dedupe(all_articles)
     unique.sort(key=lambda a: (a.stocks_count, a.likes_count), reverse=True)
 
-    top = unique[:TOP_N]
-
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
     previous_csv_path = find_previous_csv(today_stamp)
     previous_snapshot = load_previous_snapshot(previous_csv_path)
-    apply_deltas(top, previous_snapshot)
+
+    # CSVを全件保存するため、差分も全件に付与する。
+    apply_deltas(unique, previous_snapshot)
+
+    top = unique[:TOP_N]
 
     if previous_csv_path:
         print(f"[info] previous csv: {previous_csv_path}", file=sys.stderr)
@@ -613,7 +620,9 @@ def main() -> int:
     )
 
     md_path.write_text(md_text, encoding="utf-8")
-    write_csv(csv_path, top)
+
+    # Markdownは上位20件のみ表示するが、CSVは将来の急上昇ランキング用に全件保存する。
+    write_csv(csv_path, unique)
 
     print(
         f"[done] unique articles: {len(unique)}, top {len(top)} written.",
