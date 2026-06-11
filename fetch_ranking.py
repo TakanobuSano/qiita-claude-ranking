@@ -2,17 +2,15 @@
 """
 Qiita 記事ランキング取得スクリプト。
 
-Qiita API v2 を使って、claude / ClaudeCode / MCP タグの記事を直近14日間で取得し、
-stocks_count 降順でランキング化して Markdown と CSV を出力する。
+Qiita API v2 を使って、claude / ClaudeCode / MCP タグの記事を取得し、
+Markdown と CSV を出力する。
 
 主な機能:
-- 直近14日間の対象タグ記事を取得
-- 記事IDで重複排除
-- ストック数順でランキング化
-- output/ に Markdown / CSV を保存
-- 前回CSVと比較して、ストック数・いいね数の差分を算出
-- Markdown は表示用として上位20件のみ出力
-- CSV は将来の急上昇ランキング用に取得対象の全件を出力
+- 急上昇ランキングの将来作成に備えて、直近30日間に投稿された対象タグ記事を取得する
+- 記事IDで重複排除する
+- CSVには、直近30日間に投稿された取得対象記事を全件保存する
+- Markdownには、直近14日間に投稿された記事の累計ストック数ランキング上位20件のみ表示する
+- 前回CSVと比較して、ストック数・いいね数の差分を算出する
 - Qiita記事上では見やすさ優先で「（+54）」のように差分のみ表示する
 """
 
@@ -23,7 +21,7 @@ import os
 import sys
 import time
 from dataclasses import dataclass, field
-from datetime import datetime, timedelta, timezone
+from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 from typing import Any, Iterable
 from urllib.parse import urlencode
@@ -36,7 +34,15 @@ QIITA_API_BASE = "https://qiita.com/api/v2/items"
 
 TARGET_TAGS = ["claude", "ClaudeCode", "MCP"]
 
-LOOKBACK_DAYS = 14
+# 通常ランキング:
+# 直近14日間に投稿された記事の累計ストック数順。
+RANKING_LOOKBACK_DAYS = 14
+
+# CSV保存対象:
+# 将来、直近30日間に投稿された記事を対象にした急上昇ランキングを作るため、
+# 通常ランキングより広い期間で記事を取得・保存する。
+DATA_LOOKBACK_DAYS = 30
+
 PER_PAGE = 100
 MAX_PAGES = 10
 TOP_N = 20
@@ -268,6 +274,48 @@ def dedupe(articles: Iterable[Article]) -> list[Article]:
     return list(seen.values())
 
 
+def parse_created_date(created_at: str) -> date | None:
+    """
+    Qiita API の created_at を JST の日付に変換する。
+    フィルタリングに使うため、変換できない場合は None を返す。
+    """
+    if not created_at:
+        return None
+
+    try:
+        dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
+
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+
+        return dt.astimezone(JST).date()
+    except ValueError:
+        return None
+
+
+def filter_articles_by_created_date(
+    articles: list[Article],
+    since_date: date,
+    today: date,
+) -> list[Article]:
+    """
+    created_at が since_date 〜 today の範囲に入る記事だけを返す。
+    入力 articles はすでに並び替え済みなので、並び順は維持する。
+    """
+    filtered: list[Article] = []
+
+    for article in articles:
+        created_date = parse_created_date(article.created_at)
+
+        if created_date is None:
+            continue
+
+        if since_date <= created_date <= today:
+            filtered.append(article)
+
+    return filtered
+
+
 def format_created_at(created_at: str) -> str:
     """
     Qiita API の created_at を、Qiita記事向けに読みやすい形式へ変換する。
@@ -277,7 +325,11 @@ def format_created_at(created_at: str) -> str:
 
     try:
         dt = datetime.fromisoformat(created_at.replace("Z", "+00:00"))
-        return dt.strftime("%Y-%m-%d %H時投稿")
+
+        if dt.tzinfo is None:
+            dt = dt.replace(tzinfo=timezone.utc)
+
+        return dt.astimezone(JST).strftime("%Y-%m-%d %H時投稿")
     except ValueError:
         return created_at[:10]
 
@@ -385,7 +437,7 @@ def apply_deltas(articles: list[Article], previous_snapshot: dict[str, dict[str,
     """
     現在の記事リストに前回比を付与する。
 
-    CSVを全件保存するため、ここでは top ではなく unique 全件に対して差分を付ける。
+    CSVを全件保存するため、直近30日間の unique 全件に対して差分を付ける。
     """
     for current_rank, article in enumerate(articles, start=1):
         previous = previous_snapshot.get(article.id)
@@ -434,9 +486,9 @@ def format_delta(delta: int | None) -> str:
 
 def render_markdown(
     top: list[Article],
-    since_date: str,
+    ranking_since_date: str,
     today: str,
-    total_unique: int,
+    total_ranking_articles: int,
     updated_at: str,
     previous_csv_path: Path | None,
 ) -> str:
@@ -449,9 +501,8 @@ def render_markdown(
     lines.append(f"最終更新: **{updated_at} JST**")
     lines.append("")
     lines.append(f"- 対象タグ: {target_tags_text}")
-    lines.append(f"- 対象期間: {since_date} 〜 {today}")
-    lines.append(f"- 集計記事数: {total_unique} 件")
-
+    lines.append(f"- ランキング対象期間: {ranking_since_date} 〜 {today}")
+    lines.append(f"- 集計記事数: {total_ranking_articles} 件")
     if previous_csv_path:
         lines.append("- 比較: 前回更新時点との差分")
     else:
@@ -566,15 +617,18 @@ def main() -> int:
 
     now_jst = datetime.now(JST)
     today_jst = now_jst.date()
-    since = today_jst - timedelta(days=LOOKBACK_DAYS)
 
-    since_date = since.isoformat()
+    ranking_since = today_jst - timedelta(days=RANKING_LOOKBACK_DAYS)
+    data_since = today_jst - timedelta(days=DATA_LOOKBACK_DAYS)
+
+    ranking_since_date = ranking_since.isoformat()
+    data_since_date = data_since.isoformat()
     today_str = today_jst.isoformat()
     today_stamp = today_jst.strftime("%Y%m%d")
     updated_at = now_jst.strftime("%Y-%m-%d %H:%M:%S")
 
     print(
-        f"[info] fetching tags={TARGET_TAGS} since {since_date} (JST)",
+        f"[info] fetching tags={TARGET_TAGS} since {data_since_date} (JST)",
         file=sys.stderr,
     )
 
@@ -582,7 +636,7 @@ def main() -> int:
 
     for tag in TARGET_TAGS:
         try:
-            fetched = fetch_tag(tag, since_date, token)
+            fetched = fetch_tag(tag, data_since_date, token)
             print(f"[info] fetched tag={tag}: {len(fetched)} items", file=sys.stderr)
             all_articles.extend(fetched)
         except Exception as e:
@@ -597,10 +651,16 @@ def main() -> int:
     previous_csv_path = find_previous_csv(today_stamp)
     previous_snapshot = load_previous_snapshot(previous_csv_path)
 
-    # CSVを全件保存するため、差分も全件に付与する。
+    # CSVを全件保存するため、直近30日間の unique 全件に差分を付与する。
     apply_deltas(unique, previous_snapshot)
 
-    top = unique[:TOP_N]
+    # Markdownは、通常ランキングとして直近14日間に投稿された記事だけを対象にする。
+    ranking_articles = filter_articles_by_created_date(
+        articles=unique,
+        since_date=ranking_since,
+        today=today_jst,
+    )
+    top = ranking_articles[:TOP_N]
 
     if previous_csv_path:
         print(f"[info] previous csv: {previous_csv_path}", file=sys.stderr)
@@ -612,27 +672,29 @@ def main() -> int:
 
     md_text = render_markdown(
         top=top,
-        since_date=since_date,
+        ranking_since_date=ranking_since_date,
         today=today_str,
-        total_unique=len(unique),
+        total_ranking_articles=len(ranking_articles),
         updated_at=updated_at,
         previous_csv_path=previous_csv_path,
     )
 
     md_path.write_text(md_text, encoding="utf-8")
 
-    # Markdownは上位20件のみ表示するが、CSVは将来の急上昇ランキング用に全件保存する。
+    # Markdownは直近14日間の上位20件のみ表示する。
+    # CSVは将来の急上昇ランキング用に、直近30日間の記事を全件保存する。
     write_csv(csv_path, unique)
 
     print(
-        f"[done] unique articles: {len(unique)}, top {len(top)} written.",
+        f"[done] saved articles: {len(unique)}, "
+        f"ranking articles: {len(ranking_articles)}, top {len(top)} written.",
         file=sys.stderr,
     )
     print(f" - {md_path}", file=sys.stderr)
     print(f" - {csv_path}", file=sys.stderr)
 
     if not top:
-        print("[warn] no articles found in the period.", file=sys.stderr)
+        print("[warn] no articles found in the ranking period.", file=sys.stderr)
 
     return 0
 
