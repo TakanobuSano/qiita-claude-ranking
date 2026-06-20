@@ -29,6 +29,10 @@ jobs:
         run: |
           python fetch_ranking.py
 
+      - name: Generate rising ranking
+        run: |
+          python generate_rising_ranking.py
+
       - name: Keep latest 30 days of output files
         run: |
           python - <<'PY'
@@ -36,32 +40,55 @@ jobs:
           from collections import defaultdict
           import re
 
-          output_dir = Path("output")
-          pattern = re.compile(r"^qiita_claude_ranking_(\d{8})\.(md|csv)$")
 
-          files_by_date = defaultdict(list)
+          def keep_latest_days(
+              target_dir: Path,
+              glob_pattern: str,
+              regex_pattern: str,
+              keep_count: int = 30,
+          ) -> None:
+              if not target_dir.exists():
+                  print(f"skip: {target_dir} does not exist")
+                  return
 
-          for path in output_dir.glob("qiita_claude_ranking_*.*"):
-              match = pattern.match(path.name)
+              pattern = re.compile(regex_pattern)
+              files_by_date = defaultdict(list)
 
-              if not match:
-                  continue
+              for path in target_dir.glob(glob_pattern):
+                  match = pattern.match(path.name)
 
-              date_text = match.group(1)
-              files_by_date[date_text].append(path)
+                  if not match:
+                      continue
 
-          # 日付の新しい順に並べて、最新30日分だけ残す
-          keep_dates = set(sorted(files_by_date.keys(), reverse=True)[:30])
+                  date_text = match.group(1)
+                  files_by_date[date_text].append(path)
 
-          for date_text, paths in files_by_date.items():
-              if date_text in keep_dates:
-                  continue
+              keep_dates = set(sorted(files_by_date.keys(), reverse=True)[:keep_count])
 
-              for path in paths:
-                  print(f"delete: {path}")
-                  path.unlink()
+              for date_text, paths in files_by_date.items():
+                  if date_text in keep_dates:
+                      continue
 
-          print("keep dates:", ", ".join(sorted(keep_dates, reverse=True)))
+                  for path in paths:
+                      print(f"delete: {path}")
+                      path.unlink()
+
+              print(f"{target_dir} keep dates:", ", ".join(sorted(keep_dates, reverse=True)))
+
+
+          keep_latest_days(
+              target_dir=Path("output"),
+              glob_pattern="qiita_claude_ranking_*.*",
+              regex_pattern=r"^qiita_claude_ranking_(\d{8})\.(md|csv)$",
+              keep_count=30,
+          )
+
+          keep_latest_days(
+              target_dir=Path("output/rising"),
+              glob_pattern="qiita_claude_rising_*.*",
+              regex_pattern=r"^qiita_claude_rising_(\d{8})\.(md|csv)$",
+              keep_count=30,
+          )
           PY
 
       - name: Commit ranking outputs
@@ -74,7 +101,7 @@ jobs:
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
-            git commit -m "Update weekly Qiita Claude ranking"
+            git commit -m "Update Qiita Claude ranking outputs"
             git push
           fi
 
@@ -85,6 +112,19 @@ jobs:
           QIITA_POST_PRIVATE: "false"
         run: |
           python update_qiita_item.py
+
+      - name: Update Qiita rising item
+        env:
+          QIITA_ACCESS_TOKEN: ${{ secrets.QIITA_ACCESS_TOKEN }}
+          QIITA_RISING_ITEM_ID: ${{ secrets.QIITA_RISING_ITEM_ID }}
+          QIITA_POST_PRIVATE: "false"
+        run: |
+          if [ -z "$QIITA_RISING_ITEM_ID" ]; then
+            echo "QIITA_RISING_ITEM_ID is not set. Skip updating rising ranking item."
+            exit 0
+          fi
+
+          python update_qiita_rising_item.py
 
       - name: Check Teams posting day
         id: teams_day
