@@ -338,9 +338,9 @@ def render_markdown(
             f"◇ **{format_delta(article.stocks_delta_7d)}ストック** "
             f"（{article.previous_stocks_count} → {article.current_stocks_count}） "
             f"♡ **{format_delta(article.likes_delta_7d)}いいね** "
-            f"（{article.previous_likes_count} → {article.current_likes_count}） / "
-            f"{user_part} {created}{new_label}"
+            f"（{article.previous_likes_count} → {article.current_likes_count}）  "
         )
+        lines.append(f"{user_part} {created}{new_label}")
         lines.append("")
 
         if tag_badges:
