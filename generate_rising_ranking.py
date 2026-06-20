@@ -307,8 +307,6 @@ def render_markdown(
     lines.append(f"- 集計期間: {baseline_date.isoformat()} 〜 {current_date.isoformat()}")
     lines.append(f"- 集計基準: 直近{RISING_LOOKBACK_DAYS}日間のストック増加数")
     lines.append(f"- 集計対象記事数: {len(rising_articles)} 件")
-    lines.append(f"- 比較元CSV: `{baseline_csv_path.name}`")
-    lines.append(f"- 最新CSV: `{current_csv_path.name}`")
     lines.append(":::")
     lines.append("")
 
