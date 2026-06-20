@@ -29,6 +29,9 @@ TITLE = "【毎日更新】Claude Code関連で今注目されているQiita記�
 EXPLANATION_ARTICLE_URL = "https://qiita.com/4q_sano/items/1bc5e0669a8f0166936c"
 GITHUB_REPOSITORY_URL = "https://github.com/TakanobuSano/qiita-claude-ranking"
 
+WEEKLY_TREND_RANKING_URL = "https://qiita.com/4q_sano/items/cc27d3564a657046242a"
+POPULAR_RANKING_URL = "https://qiita.com/4q_sano/items/1d98dd5fb49ce99bd288"
+
 
 def find_latest_markdown() -> Path:
     """
@@ -87,6 +90,14 @@ def build_body(md_path: Path) -> str:
 :::note warn
 このランキングは「直近14日間に投稿された記事の累計ストック数ランキング」です。「この2週間で増えたストック数ランキング」ではありません。
 :::
+
+## 関連ランキング
+
+Claude Code向けのスキル・MCP・関連ツールを探したい方は、こちらも参考になります。
+
+{WEEKLY_TREND_RANKING_URL}
+
+{POPULAR_RANKING_URL}
 
 ## 作成方法の解説
 
